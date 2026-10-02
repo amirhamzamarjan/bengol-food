@@ -88,6 +88,7 @@
     }
 
     modal.classList.add('active');
+    document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
   }
 
@@ -140,6 +141,7 @@
     }
 
     modal.classList.add('active');
+    document.body.classList.add('modal-open');
     document.body.style.overflow = 'hidden';
   }
 
@@ -181,7 +183,8 @@
       }
     } catch (err) {
       console.error('Bulk submission error:', err);
-      alert('An unexpected error occurred. Please reach us directly on WhatsApp at 01921692008.');
+      const phone = window.US_BENGOL_CONFIG?.brand?.phoneDisplay || '+880 1000-000000';
+      alert(`An unexpected error occurred. Please reach us directly on WhatsApp at ${phone}.`);
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -193,6 +196,7 @@
   function closeAllModals() {
     const modals = document.querySelectorAll('.modal-backdrop');
     modals.forEach(m => m.classList.remove('active'));
+    document.body.classList.remove('modal-open');
     document.body.style.overflow = '';
     currentModalProduct = null;
   }

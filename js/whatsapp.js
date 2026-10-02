@@ -2,13 +2,13 @@
  * US BENGOL - WhatsApp Ordering Utility
  * 
  * Generates structured, pre-filled WhatsApp ordering messages
- * directed to official brand number: 01921692008 (+8801921692008).
+ * directed to official brand number.
  */
 
 (function (window) {
   'use strict';
 
-  const WHATSAPP_PHONE = '8801921692008';
+  const WHATSAPP_PHONE = window.US_BENGOL_CONFIG?.brand?.whatsappNumber || '8801000000000';
 
   function createProductOrderUrl(productName, quantity, pricePerPack) {
     const qty = parseInt(quantity, 10) || 1;

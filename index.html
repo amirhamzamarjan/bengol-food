@@ -47,7 +47,7 @@
     "@type": "FoodEstablishment",
     "name": "US BENGOL",
     "image": "https://usbengol.com/images/logo.png",
-    "telephone": "+8801921692008",
+    "telephone": "+880 1000-000000",
     "address": {
       "@type": "PostalAddress",
       "streetAddress": "Bawgan, Uttarkhan",
@@ -108,17 +108,22 @@
       <div class="nav-actions">
         <a href="#products" class="btn btn-primary">Order Now</a>
         <button type="button" class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle navigation menu" aria-expanded="false">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg class="icon-hamburger" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="12" x2="21" y2="12"></line>
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+          <svg class="icon-close" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
       </div>
     </div>
 
-    <!-- Mobile Drawer -->
-    <div class="mobile-nav-drawer" id="mobile-nav-drawer">
+    <!-- Mobile Drawer & Backdrop -->
+    <div class="mobile-nav-backdrop" id="mobile-nav-backdrop" aria-hidden="true"></div>
+    <div class="mobile-nav-drawer" id="mobile-nav-drawer" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
       <a href="#hero" class="nav-link">Home</a>
       <a href="#products" class="nav-link">Products</a>
       <a href="#story" class="nav-link">Our Story</a>
@@ -431,7 +436,7 @@
           <span class="section-kicker">LOGISTICS</span>
           <h2 class="delivery-title">From Our Kitchen to Your Door</h2>
           <p class="delivery-desc">
-            Delivery available across Bangladesh. Based in Bawgan, Uttarkhan, Dhaka, our fulfillment network is structured to ensure timely transit, secure protective packaging, and peak freshness upon arrival.
+            Delivery available across Bangladesh. Freshly crafted at our production kitchen in Ullapara, Sirajganj and dispatched through our central fulfillment hub in Bawgan, Uttarkhan, Dhaka, our network ensures timely transit, protective packaging, and peak freshness upon arrival.
           </p>
 
           <div class="delivery-features-list">
@@ -490,7 +495,7 @@
             <div class="map-origin-badge">
               <span class="origin-pulse-pip" aria-hidden="true"></span>
               <div class="origin-text-group">
-                <span class="origin-tag">CENTRAL DISPATCH</span>
+                <span class="origin-tag">DHAKA DISPATCH HUB</span>
                 <span class="origin-city">Bawgan, Uttarkhan, Dhaka</span>
               </div>
             </div>
@@ -1105,9 +1110,11 @@
           </div>
 
           <div class="final-contact-bar">
-            <span><strong>WhatsApp:</strong> 01921692008</span>
+            <span><strong>WhatsApp:</strong> +880 1000-000000</span>
             <span>•</span>
-            <span><strong>Address:</strong> Bawgan, Uttarkhan, Dhaka 1230, Bangladesh</span>
+            <span><strong>Kitchen & Factory:</strong> Ullapara, Sirajganj</span>
+            <span>•</span>
+            <span><strong>Dhaka Dispatch:</strong> Bawgan, Uttarkhan, Dhaka</span>
             <span>•</span>
             <span><strong>Delivery:</strong> Nationwide</span>
           </div>
@@ -1156,10 +1163,14 @@
           <h4 class="footer-col-title">Direct Contact</h4>
           <div class="footer-contact-item">
             <strong>Phone / WhatsApp:</strong>
-            <a href="https://wa.me/8801921692008" target="_blank" rel="noopener noreferrer" style="color: var(--color-wheat); text-decoration: underline;">01921692008</a>
+            <a href="https://wa.me/8801000000000" target="_blank" rel="noopener noreferrer" style="color: var(--color-wheat); text-decoration: underline;">+880 1000-000000</a>
           </div>
           <div class="footer-contact-item">
-            <strong>Kitchen & Dispatch:</strong>
+            <strong>Kitchen & Factory:</strong>
+            <span>Ullapara, Sirajganj, Bangladesh</span>
+          </div>
+          <div class="footer-contact-item">
+            <strong>Dhaka Dispatch Hub:</strong>
             <span>Bawgan, Uttarkhan, Dhaka 1230, Bangladesh</span>
           </div>
           <div class="footer-contact-item">
@@ -1186,11 +1197,11 @@
        14. FLOATING WHATSAPP CTA
        ========================================================================= -->
   <a 
-    href="https://wa.me/8801921692008?text=Hello%20US%20BENGOL,%20I%20would%20like%20to%20place%20an%20order." 
+    href="https://wa.me/8801000000000?text=Hello%20US%20BENGOL,%20I%20would%20like%20to%20place%20an%20order." 
     target="_blank" 
     rel="noopener noreferrer" 
     class="floating-whatsapp-widget" 
-    aria-label="Order on WhatsApp: 01921692008"
+    aria-label="Order on WhatsApp: +880 1000-000000"
   >
     <svg viewBox="0 0 24 24">
       <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.288.043.088.072.19.014.305-.058.115-.087.187-.173.289l-.26.309c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.144.39-.086s1.011.477 1.184.564.289.13.332.203c.043.072.043.419-.101.824z"/>

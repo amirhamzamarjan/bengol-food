@@ -5,22 +5,63 @@
 document.addEventListener('DOMContentLoaded', async () => {
   'use strict';
 
-  // 1. Mobile Menu Drawer Toggle
+  // 1. Mobile Menu Drawer Controller
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileNavDrawer = document.getElementById('mobile-nav-drawer');
+  const mobileNavBackdrop = document.getElementById('mobile-nav-backdrop');
+
+  function openMobileMenu() {
+    if (!mobileNavDrawer || !mobileMenuBtn) return;
+    mobileNavDrawer.classList.add('open');
+    if (mobileNavBackdrop) mobileNavBackdrop.classList.add('open');
+    mobileMenuBtn.classList.add('active');
+    mobileMenuBtn.setAttribute('aria-expanded', 'true');
+    document.body.classList.add('mobile-nav-open');
+  }
+
+  function closeMobileMenu() {
+    if (!mobileNavDrawer || !mobileMenuBtn) return;
+    mobileNavDrawer.classList.remove('open');
+    if (mobileNavBackdrop) mobileNavBackdrop.classList.remove('open');
+    mobileMenuBtn.classList.remove('active');
+    mobileMenuBtn.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('mobile-nav-open');
+  }
 
   if (mobileMenuBtn && mobileNavDrawer) {
-    mobileMenuBtn.addEventListener('click', () => {
-      const isOpen = mobileNavDrawer.classList.toggle('open');
-      mobileMenuBtn.setAttribute('aria-expanded', isOpen);
+    mobileMenuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpen = mobileNavDrawer.classList.contains('open');
+      if (isOpen) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
     });
 
-    // Close mobile drawer when clicking any link inside it
-    mobileNavDrawer.querySelectorAll('.nav-link').forEach(link => {
+    if (mobileNavBackdrop) {
+      mobileNavBackdrop.addEventListener('click', closeMobileMenu);
+    }
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileNavDrawer.classList.contains('open')) {
+        closeMobileMenu();
+      }
+    });
+
+    // Close mobile drawer when clicking any link or CTA inside it
+    mobileNavDrawer.querySelectorAll('a').forEach(link => {
       link.addEventListener('click', () => {
-        mobileNavDrawer.classList.remove('open');
-        mobileMenuBtn.setAttribute('aria-expanded', false);
+        closeMobileMenu();
       });
+    });
+
+    // Automatically close drawer when window resizes back to desktop (> 1024px)
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024 && mobileNavDrawer.classList.contains('open')) {
+        closeMobileMenu();
+      }
     });
   }
 

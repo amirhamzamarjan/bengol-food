@@ -14,9 +14,11 @@ window.US_BENGOL_CONFIG = {
     tagline: "The familiar taste of home, presented beautifully.",
     bengaliTagline: "ঘরের স্বাদ",
     secondaryBengaliTagline: "প্রতিদিনের পরিচিত স্বাদ",
-    phoneDisplay: "01921692008",
-    whatsappNumber: "8801921692008", // E.164 format without '+'
-    address: "Bawgan, Uttarkhan, Dhaka 1230, Bangladesh",
+    phoneDisplay: "+880 1000-000000",
+    whatsappNumber: "8801000000000", // E.164 format without '+'
+    factoryAddress: "Ullapara, Sirajganj, Bangladesh",
+    dispatchAddress: "Bawgan, Uttarkhan, Dhaka 1230, Bangladesh",
+    address: "Kitchen: Ullapara, Sirajganj | Dispatch: Uttarkhan, Dhaka",
     deliveryScope: "Nationwide across Bangladesh",
     logoPath: "images/logo.png"
   },
@@ -154,7 +156,7 @@ window.US_BENGOL_CONFIG = {
       number: "04",
       title: "Delivered Nationwide",
       subtitle: "সারা দেশে পৌঁছে দেওয়া",
-      description: "From our kitchen in Uttarkhan, Dhaka, our supply reaches homes, restaurants, and institutions across Bangladesh."
+      description: "Crafted at our production kitchen in Ullapara, Sirajganj and dispatched via our central Dhaka hub, our supply reaches homes, restaurants, and institutions across Bangladesh."
     }
   ],
 

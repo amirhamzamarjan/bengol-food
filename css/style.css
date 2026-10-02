@@ -350,6 +350,41 @@ img {
   cursor: pointer;
   padding: 8px;
   color: var(--color-brown-900);
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+.mobile-menu-btn:hover {
+  background-color: rgba(44, 30, 22, 0.06);
+}
+.mobile-menu-btn .icon-close {
+  display: none;
+}
+.mobile-menu-btn.active .icon-hamburger {
+  display: none;
+}
+.mobile-menu-btn.active .icon-close {
+  display: block;
+}
+
+/* Mobile Nav Backdrop Overlay */
+.mobile-nav-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(29, 20, 14, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-normal);
+}
+.mobile-nav-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* Mobile Nav Drawer */
@@ -358,22 +393,46 @@ img {
   top: var(--nav-height);
   left: 0;
   width: 100%;
+  max-height: calc(100dvh - var(--nav-height));
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   background: var(--color-white);
   border-bottom: 1px solid rgba(44, 30, 22, 0.08);
-  box-shadow: var(--shadow-lg);
-  padding: 24px 20px;
-  display: none;
+  box-shadow: 0 16px 36px rgba(44, 30, 22, 0.12);
+  padding: 20px clamp(16px, 4vw, 24px) 28px clamp(16px, 4vw, 24px);
+  display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
   z-index: 999;
+  transform: translateY(-8px);
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.22s ease, visibility 0.25s;
 }
 .mobile-nav-drawer.open {
-  display: flex;
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
 }
 .mobile-nav-drawer .nav-link {
-  font-size: 1.125rem;
-  padding: 10px 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-brown-800);
+  padding: 12px 4px;
   border-bottom: 1px solid rgba(44, 30, 22, 0.05);
+  transition: color var(--transition-fast), padding-left var(--transition-fast);
+}
+.mobile-nav-drawer .nav-link:hover {
+  color: var(--color-brown-900);
+  padding-left: 6px;
+}
+
+body.mobile-nav-open {
+  overflow: hidden;
+  touch-action: none;
 }
 
 /* =========================================================================
@@ -400,7 +459,7 @@ img {
 }
 
 .hero-title {
-  font-size: clamp(2.35rem, 4.4vw, 3.85rem);
+  font-size: clamp(1.95rem, 4.4vw, 3.85rem);
   font-weight: 800;
   line-height: 1.12;
   color: var(--color-brown-900);
@@ -1900,9 +1959,11 @@ img {
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: clamp(12px, 3vw, 24px);
   opacity: 0;
   transition: opacity var(--transition-normal);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .modal-backdrop.active {
   display: flex;
@@ -1914,13 +1975,17 @@ img {
   border-radius: var(--radius-lg);
   max-width: 680px;
   width: 100%;
+  max-height: calc(100dvh - 32px);
   max-height: 90vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   box-shadow: var(--shadow-modal);
   border: 1px solid rgba(44, 30, 22, 0.08);
   position: relative;
   transform: translateY(20px) scale(0.98);
   transition: transform var(--transition-normal);
+  margin: auto;
 }
 .modal-backdrop.active .modal-dialog {
   transform: translateY(0) scale(1);
@@ -1928,23 +1993,31 @@ img {
 
 .modal-close-btn {
   position: absolute;
-  top: 18px;
-  right: 18px;
-  width: 36px;
-  height: 36px;
+  top: 16px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
-  background: rgba(44, 30, 22, 0.06);
+  background: rgba(44, 30, 22, 0.07);
   border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-brown-900);
-  transition: background var(--transition-fast);
-  z-index: 10;
+  transition: background-color var(--transition-fast), transform var(--transition-fast);
+  z-index: 20;
 }
 .modal-close-btn:hover {
-  background: rgba(44, 30, 22, 0.12);
+  background: rgba(44, 30, 22, 0.14);
+  transform: scale(1.05);
+}
+
+body.modal-open {
+  overflow: hidden;
+  touch-action: none;
 }
 
 .modal-body {
