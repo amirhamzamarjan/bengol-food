@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FAF4EE"/>
+      <stop offset="100%" stop-color="#EADBCE"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="450" fill="url(#bg2)"/>
+  <circle cx="300" cy="225" r="140" fill="#E2CFBE" opacity="0.4"/>
+  <!-- Dough Bowl and Hands Iconography -->
+  <ellipse cx="300" cy="300" rx="110" ry="30" fill="#38261C" opacity="0.12"/>
+  <path d="M190 270 Q300 350 410 270 C390 220 210 220 190 270 Z" fill="#8C5C38"/>
+  <ellipse cx="300" cy="245" rx="80" ry="35" fill="#EFE5D8"/>
+  <path d="M260 210 Q280 180 300 195 Q320 180 340 210 C320 230 280 230 260 210 Z" fill="#DFCBB5"/>
+  <text x="300" y="375" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600" fill="#38261C" text-anchor="middle" letter-spacing="2">02 · TRADITIONAL INSPIRATION</text>
+  <text x="300" y="400" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" fill="#6C5F56" text-anchor="middle">Gentle, patient dough preparation</text>
+</svg>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | US BENGOL</title>
+  <link rel="icon" type="image/png" href="../images/logo.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+  <!-- LOGIN SCREEN (Shown if not logged in) -->
+  <div id="admin-login-view" style="display: none; width: 100vw; height: 100vh; align-items: center; justify-content: center; background: var(--admin-bg);">
+    <div style="background: #FFF; padding: 40px; border-radius: var(--admin-radius); border: 1px solid var(--admin-border); box-shadow: var(--shadow-md); max-width: 420px; width: 90%;">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <img src="../images/logo.png" alt="US BENGOL Logo" style="height: 48px; margin: 0 auto 16px auto;">
+        <h2 style="font-size: 1.4rem; color: var(--admin-text);">Admin Portal</h2>
+        <p style="font-size: 0.875rem; color: var(--admin-muted);">Manage products, pricing, and bulk requests.</p>
+      </div>
+
+      <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 16px;">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email / Username</label>
+          <input type="text" id="login-email" class="form-input" required value="admin@usbengol.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input type="password" id="login-password" class="form-input" required value="admin123">
+        </div>
+        <div id="login-error-msg" style="display: none; color: #DC2626; font-size: 0.8125rem;"></div>
+
+        <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px; margin-top: 8px;">
+          Log In
+        </button>
+
+        <div style="margin-top: 10px; padding: 12px; background: #FAF8F5; border-radius: 8px; font-size: 0.75rem; color: var(--admin-muted); line-height: 1.5;">
+          <strong>Demo credentials pre-filled:</strong><br>
+          User: <code>admin@usbengol.com</code> · Pass: <code>admin123</code><br>
+          <em>(Connect your Supabase project in Settings for cloud auth)</em>
+        </div>
+
+        <div style="text-align: center; margin-top: 10px;">
+          <a href="../index.html" style="font-size: 0.8125rem; color: var(--admin-muted); text-decoration: underline;">← Return to Storefront</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- AUTHENTICATED DASHBOARD VIEW -->
+  <div id="admin-dashboard-view" style="display: none; width: 100%; display: flex;">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-brand">
+        <img src="../images/logo.png" alt="US BENGOL" class="admin-sidebar-logo">
+        <span class="admin-sidebar-title">ADMIN PANEL</span>
+      </div>
+
+      <nav class="admin-nav">
+        <a href="index.html" class="admin-nav-item active">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Dashboard
+        </a>
+        <a href="products.html" class="admin-nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          Products & Pricing
+        </a>
+        <a href="requests.html" class="admin-nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Bulk Requests
+        </a>
+        <a href="content.html" class="admin-nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Site Content
+        </a>
+        <a href="settings.html" class="admin-nav-item">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Supabase Settings
+        </a>
+      </nav>
+
+      <div class="admin-sidebar-footer">
+        <a href="../index.html" target="_blank" class="admin-nav-item" style="color: var(--color-gold);">
+          ↗ View Storefront
+        </a>
+        <button type="button" id="admin-logout-btn" class="admin-nav-item" style="background: none; border: none; cursor: pointer; text-align: left; width: 100%; color: #EF4444;">
+          Log Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Section -->
+    <main class="admin-main">
+      <div class="admin-topbar">
+        <h1 class="admin-topbar-title">Dashboard Overview</h1>
+        <div class="admin-user-pill">
+          <span class="admin-status-badge badge-online" id="db-status-pill">
+            <span style="width: 6px; height: 6px; border-radius: 50%; background: currentColor;"></span>
+            Data Layer Active
+          </span>
+          <span id="current-user-email">admin@usbengol.com</span>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <!-- Practical Real Database Metrics (No fabricated data) -->
+        <div class="metrics-row">
+          <div class="metric-card">
+            <div class="metric-title">Total Products</div>
+            <div class="metric-value" id="metric-total-prods">3</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Published / Visible</div>
+            <div class="metric-value" id="metric-visible-prods">3</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">New Bulk Requests</div>
+            <div class="metric-value" id="metric-new-orders" style="color: #D97706;">0</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-title">Completed Orders</div>
+            <div class="metric-value" id="metric-completed-orders" style="color: #16A34A;">0</div>
+          </div>
+        </div>
+
+        <!-- Products Quick Management View -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title">Products & Live Prices</h2>
+            <a href="products.html" class="btn-sm btn-sm-gold">Manage Products & Prices →</a>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category / Badge</th>
+                <th>Price</th>
+                <th>Availability</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="dash-products-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Recent Bulk Requests Table -->
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h2 class="admin-card-title">Recent Bulk Requests</h2>
+            <a href="requests.html" class="btn-sm btn-sm-outline">View All Requests →</a>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Customer / Org</th>
+                <th>Phone</th>
+                <th>Product & Qty</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dash-requests-tbody">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../config/content.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const loginView = document.getElementById('admin-login-view');
+      const dashView = document.getElementById('admin-dashboard-view');
+      const session = window.USB_Supabase.getAdminSession();
+
+      if (!session) {
+        loginView.style.display = 'flex';
+        dashView.style.display = 'none';
+        setupLoginForm();
+      } else {
+        loginView.style.display = 'none';
+        dashView.style.display = 'flex';
+        document.getElementById('current-user-email').textContent = session.user?.email || 'admin@usbengol.com';
+        await loadDashboardData();
+      }
+
+      document.getElementById('admin-logout-btn')?.addEventListener('click', () => {
+        window.USB_Supabase.logoutAdmin();
+        window.location.reload();
+      });
+    });
+
+    function setupLoginForm() {
+      const form = document.getElementById('admin-login-form');
+      const errorMsg = document.getElementById('login-error-msg');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value.trim();
+
+        const res = await window.USB_Supabase.loginAdmin(email, password);
+        if (res.success) {
+          window.location.reload();
+        } else {
+          errorMsg.textContent = res.error || 'Authentication failed.';
+          errorMsg.style.display = 'block';
+        }
+      });
+    }
+
+    async function loadDashboardData() {
+      // 1. Load Products
+      const products = await window.USB_Supabase.getProducts();
+      document.getElementById('metric-total-prods').textContent = products.length;
+      document.getElementById('metric-visible-prods').textContent = products.filter(p => p.is_visible !== false).length;
+
+      const prodTbody = document.getElementById('dash-products-tbody');
+      if (prodTbody) {
+        prodTbody.innerHTML = products.map(p => `
+          <tr>
+            <td>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img src="../${p.image_url}" class="table-prod-thumb" alt="${p.name}" onerror="this.src='../images/ataruti.png';">
+                <div>
+                  <strong>${p.name}</strong><br>
+                  <span style="font-size: 0.8rem; color: var(--admin-muted);">${p.bengali_name || p.bengaliName || ''}</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="badge badge-gold">${p.badge || 'Standard'}</span></td>
+            <td><strong style="font-size: 1rem; color: var(--admin-text);">৳${(parseFloat(p.price) || 0).toFixed(2)}</strong></td>
+            <td>
+              <span class="status-tag ${p.is_available !== false ? 'completed' : 'new'}">
+                ${p.is_available !== false ? 'Available' : 'Unavailable'}
+              </span>
+            </td>
+            <td>
+              <a href="products.html?edit=${p.id}" class="btn-sm btn-sm-outline">Edit Price / Info</a>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // 2. Load Bulk Orders
+      const bulkOrders = await window.USB_Supabase.getBulkOrders();
+      const newCount = bulkOrders.filter(o => o.status === 'New').length;
+      const completedCount = bulkOrders.filter(o => o.status === 'Completed').length;
+
+      document.getElementById('metric-new-orders').textContent = newCount;
+      document.getElementById('metric-completed-orders').textContent = completedCount;
+
+      const reqTbody = document.getElementById('dash-requests-tbody');
+      if (reqTbody) {
+        if (bulkOrders.length === 0) {
+          reqTbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--admin-muted); padding: 30px;">No bulk order inquiries yet. Submissions from the public storefront will appear here.</td></tr>`;
+        } else {
+          reqTbody.innerHTML = bulkOrders.slice(0, 5).map(o => {
+            const dateStr = o.created_at ? new Date(o.created_at).toLocaleDateString() : 'Recent';
+            const statusClass = (o.status || 'New').toLowerCase();
+            return `
+              <tr>
+                <td>${dateStr}</td>
+                <td>
+                  <strong>${o.full_name}</strong>
+                  ${o.organization ? `<br><small style="color: var(--admin-muted);">${o.organization}</small>` : ''}
+                </td>
+                <td><a href="https://wa.me/88${o.phone.replace(/[^0-9]/g, '')}" target="_blank" style="color: var(--admin-primary); text-decoration: underline;">${o.phone}</a></td>
+                <td>${o.product} (${o.quantity})</td>
+                <td>${o.delivery_location || '-'}</td>
+                <td><span class="status-tag ${statusClass}">${o.status || 'New'}</span></td>
+                <td>
+                  <a href="requests.html" class="btn-sm btn-sm-outline">Manage</a>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      }
+    }
+  </script>
+</body>
+</html>

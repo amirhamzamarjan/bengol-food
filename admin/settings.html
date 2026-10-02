@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Supabase & Database Settings | US BENGOL Admin</title>
+  <link rel="icon" type="image/png" href="../images/logo.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="../images/logo.png" alt="US BENGOL" class="admin-sidebar-logo">
+      <span class="admin-sidebar-title">ADMIN PANEL</span>
+    </div>
+
+    <nav class="admin-nav">
+      <a href="index.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="products.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Products & Pricing
+      </a>
+      <a href="requests.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Bulk Requests
+      </a>
+      <a href="content.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Site Content
+      </a>
+      <a href="settings.html" class="admin-nav-item active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Supabase Settings
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="../index.html" target="_blank" class="admin-nav-item" style="color: var(--color-gold);">↗ View Storefront</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-topbar-title">Supabase & Database Configuration</h1>
+    </div>
+
+    <div class="admin-content">
+      <!-- Status Card -->
+      <div class="admin-card">
+        <h2 class="admin-card-title">Connection Status</h2>
+        <div id="connection-status-banner" style="padding: 16px; border-radius: 8px; margin-top: 12px; display: flex; align-items: center; justify-content: space-between;">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span id="status-indicator-dot" style="width: 12px; height: 12px; border-radius: 50%;"></span>
+            <span id="status-indicator-text" style="font-weight: 600; font-size: 0.95rem;"></span>
+          </div>
+          <button type="button" class="btn-sm btn-sm-outline" onclick="testConnection()">Test Connection</button>
+        </div>
+      </div>
+
+      <!-- Config Form -->
+      <div class="admin-card">
+        <h2 class="admin-card-title" style="margin-bottom: 8px;">Supabase Credentials</h2>
+        <p style="font-size: 0.875rem; color: var(--admin-muted); margin-bottom: 20px;">
+          Enter your Supabase project credentials. Only public anonymous keys should ever be used on the client-side.
+        </p>
+
+        <form id="settings-form" class="form-grid">
+          <div class="form-group full-col">
+            <label class="form-label" for="cfg-supabase-url">SUPABASE_URL</label>
+            <input type="url" id="cfg-supabase-url" class="form-input" placeholder="https://xyzcompany.supabase.co">
+          </div>
+
+          <div class="form-group full-col">
+            <label class="form-label" for="cfg-supabase-key">SUPABASE_ANON_KEY (Public Key)</label>
+            <textarea id="cfg-supabase-key" class="form-textarea" style="min-height: 80px;" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
+          </div>
+
+          <div class="form-group full-col" style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 10px;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="clearConfig()">Clear Keys</button>
+            <button type="submit" class="btn btn-primary btn-sm">Save & Connect</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- SQL Setup Reference -->
+      <div class="admin-card">
+        <h2 class="admin-card-title" style="margin-bottom: 12px;">Database Schema & Tables</h2>
+        <p style="font-size: 0.875rem; color: var(--admin-muted); margin-bottom: 16px;">
+          The schema file is located at <code>supabase_schema.sql</code> in the project root. It creates the <code>products</code>, <code>bulk_orders</code>, and <code>site_content</code> tables with full Row Level Security (RLS) policies.
+        </p>
+        <div style="background: #FAF8F5; padding: 14px; border-radius: 8px; border: 1px solid var(--admin-border); font-family: monospace; font-size: 0.8125rem;">
+          -- 1. In Supabase Dashboard -> SQL Editor<br>
+          -- 2. Open and paste `supabase_schema.sql`<br>
+          -- 3. Click Run to set up tables, RLS policies, and seed products.
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../config/content.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!window.USB_Supabase.getAdminSession()) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      loadConfig();
+      testConnection();
+
+      document.getElementById('settings-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const url = document.getElementById('cfg-supabase-url').value.trim();
+        const key = document.getElementById('cfg-supabase-key').value.trim();
+
+        window.USB_Supabase.saveConfig(url, key);
+        alert('Configuration saved! Reconnecting...');
+        testConnection();
+      });
+    });
+
+    function loadConfig() {
+      const cfg = window.USB_Supabase.getConfig();
+      document.getElementById('cfg-supabase-url').value = cfg.url;
+      document.getElementById('cfg-supabase-key').value = cfg.key;
+    }
+
+    function clearConfig() {
+      if (confirm('Clear Supabase keys and revert to local resilient mode?')) {
+        window.USB_Supabase.saveConfig('', '');
+        loadConfig();
+        testConnection();
+      }
+    }
+
+    function testConnection() {
+      const banner = document.getElementById('connection-status-banner');
+      const dot = document.getElementById('status-indicator-dot');
+      const text = document.getElementById('status-indicator-text');
+      const cfg = window.USB_Supabase.getConfig();
+
+      if (cfg.isConfigured && window.USB_Supabase.client) {
+        banner.style.background = '#DCFCE7';
+        banner.style.border = '1px solid #BBF7D0';
+        dot.style.background = '#16A34A';
+        text.style.color = '#15803D';
+        text.textContent = 'Connected to Supabase PostgreSQL (Cloud Sync Active)';
+      } else {
+        banner.style.background = '#FEF3C7';
+        banner.style.border = '1px solid #FDE68A';
+        dot.style.background = '#D97706';
+        text.style.color = '#B45309';
+        text.textContent = 'Running in Resilient Local Mode (Ready to connect anytime)';
+      }
+    }
+  </script>
+</body>
+</html>

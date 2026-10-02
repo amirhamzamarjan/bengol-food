@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Order Inquiries | US BENGOL Admin</title>
+  <link rel="icon" type="image/png" href="../images/logo.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="../images/logo.png" alt="US BENGOL" class="admin-sidebar-logo">
+      <span class="admin-sidebar-title">ADMIN PANEL</span>
+    </div>
+
+    <nav class="admin-nav">
+      <a href="index.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="products.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Products & Pricing
+      </a>
+      <a href="requests.html" class="admin-nav-item active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Bulk Requests
+      </a>
+      <a href="content.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Site Content
+      </a>
+      <a href="settings.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Supabase Settings
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="../index.html" target="_blank" class="admin-nav-item" style="color: var(--color-gold);">↗ View Storefront</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-topbar-title">Bulk & Institutional Orders</h1>
+      <div style="display: flex; gap: 10px;">
+        <select id="status-filter" class="form-select" style="padding: 6px 12px; font-size: 0.875rem;">
+          <option value="ALL">All Statuses</option>
+          <option value="New">New Only</option>
+          <option value="Contacted">Contacted</option>
+          <option value="Completed">Completed</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="admin-content">
+      <div class="admin-card">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Contact Details</th>
+              <th>Order Request</th>
+              <th>Location & Schedule</th>
+              <th>Message</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="bulk-orders-tbody">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../config/content.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    let allOrders = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (!window.USB_Supabase.getAdminSession()) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      await loadOrders();
+
+      document.getElementById('status-filter').addEventListener('change', (e) => {
+        renderOrders(e.target.value);
+      });
+    });
+
+    async function loadOrders() {
+      allOrders = await window.USB_Supabase.getBulkOrders();
+      renderOrders('ALL');
+    }
+
+    function renderOrders(filter) {
+      const tbody = document.getElementById('bulk-orders-tbody');
+      const filtered = filter === 'ALL' ? allOrders : allOrders.filter(o => o.status === filter);
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--admin-muted); padding: 40px;">No requests found matching criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(o => {
+        const cleanPhone = (o.phone || '').replace(/[^0-9]/g, '');
+        const dateStr = o.created_at ? new Date(o.created_at).toLocaleString() : 'Recent';
+        const status = o.status || 'New';
+
+        return `
+          <tr>
+            <td style="font-size: 0.8125rem; color: var(--admin-muted); white-space: nowrap;">${dateStr}</td>
+            <td>
+              <strong>${o.full_name}</strong>
+              ${o.organization ? `<br><small style="color: var(--admin-muted);">${o.organization}</small>` : ''}
+            </td>
+            <td>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <a href="https://wa.me/88${cleanPhone}" target="_blank" class="btn-sm btn-sm-outline" style="font-size: 0.75rem; color: #16A34A;">
+                  📱 WhatsApp: ${o.phone}
+                </a>
+                ${o.email ? `<small style="color: var(--admin-muted);">${o.email}</small>` : ''}
+              </div>
+            </td>
+            <td>
+              <strong>${o.product}</strong><br>
+              <span class="badge badge-gold" style="font-size: 0.75rem;">Qty: ${o.quantity}</span>
+            </td>
+            <td>
+              <strong>${o.delivery_location || 'Not specified'}</strong><br>
+              <small style="color: var(--admin-muted);">Sched: ${o.preferred_schedule || 'Flexible'}</small>
+            </td>
+            <td style="max-width: 220px; font-size: 0.8125rem; color: var(--admin-muted);">
+              ${o.message || '<em>None</em>'}
+            </td>
+            <td>
+              <select onchange="updateStatus('${o.id}', this.value)" class="form-select" style="padding: 4px 8px; font-size: 0.8125rem; font-weight: 600;">
+                <option value="New" ${status === 'New' ? 'selected' : ''}>New</option>
+                <option value="Contacted" ${status === 'Contacted' ? 'selected' : ''}>Contacted</option>
+                <option value="Completed" ${status === 'Completed' ? 'selected' : ''}>Completed</option>
+              </select>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function updateStatus(id, newStatus) {
+      await window.USB_Supabase.updateBulkOrderStatus(id, newStatus);
+      await loadOrders();
+    }
+  </script>
+</body>
+</html>

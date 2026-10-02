@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Products & Pricing | US BENGOL Admin</title>
+  <link rel="icon" type="image/png" href="../images/logo.png">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="admin-body">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="admin-sidebar-brand">
+      <img src="../images/logo.png" alt="US BENGOL" class="admin-sidebar-logo">
+      <span class="admin-sidebar-title">ADMIN PANEL</span>
+    </div>
+
+    <nav class="admin-nav">
+      <a href="index.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </a>
+      <a href="products.html" class="admin-nav-item active">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Products & Pricing
+      </a>
+      <a href="requests.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        Bulk Requests
+      </a>
+      <a href="content.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Site Content
+      </a>
+      <a href="settings.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Supabase Settings
+      </a>
+    </nav>
+
+    <div class="admin-sidebar-footer">
+      <a href="../index.html" target="_blank" class="admin-nav-item" style="color: var(--color-gold);">↗ View Storefront</a>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main">
+    <div class="admin-topbar">
+      <h1 class="admin-topbar-title">Product & Price Management</h1>
+      <button type="button" class="btn btn-gold btn-sm" onclick="openProductEditor()">
+        + Add New Product
+      </button>
+    </div>
+
+    <div class="admin-content">
+      <div style="margin-bottom: 20px; padding: 14px 20px; background: #FFF; border-radius: var(--admin-radius); border: 1px solid var(--admin-border); font-size: 0.875rem; color: var(--admin-muted);">
+        💡 <strong>Live Dynamic Pricing:</strong> Update prices below (currently default ৳0.00). Changes are committed directly to your data store and will immediately reflect on the public website upon refresh without editing any source code.
+      </div>
+
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2 class="admin-card-title">All Products</h2>
+        </div>
+
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Image</th>
+              <th>Product Name</th>
+              <th>Current Price</th>
+              <th>Badge</th>
+              <th>Availability</th>
+              <th>Visibility</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="products-table-body">
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <!-- Product Edit Modal -->
+  <div class="modal-backdrop" id="product-editor-modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 620px;">
+      <button type="button" class="modal-close-btn" onclick="closeProductEditor()">✕</button>
+
+      <div class="modal-body">
+        <h3 class="modal-title" id="editor-modal-title" style="margin-bottom: 20px;">Edit Product</h3>
+
+        <form id="product-form" class="form-grid">
+          <input type="hidden" id="prod-id" name="id">
+
+          <div class="form-group">
+            <label class="form-label" for="prod-name">Product Name <span class="req">*</span></label>
+            <input type="text" id="prod-name" name="name" class="form-input" required placeholder="e.g. Atta Roti">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="prod-bengali-name">Bengali Name</label>
+            <input type="text" id="prod-bengali-name" name="bengali_name" class="form-input" placeholder="e.g. আটা রুটি">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="prod-slug">Slug Identifier <span class="req">*</span></label>
+            <input type="text" id="prod-slug" name="slug" class="form-input" required placeholder="e.g. atta-roti">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="prod-price">Price (৳) <span class="req">*</span></label>
+            <input type="number" step="0.5" id="prod-price" name="price" class="form-input" required placeholder="0.00">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="prod-badge">Badge Label</label>
+            <input type="text" id="prod-badge" name="badge" class="form-input" placeholder="e.g. Everyday Staple">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="prod-sort">Display Sort Order</label>
+            <input type="number" id="prod-sort" name="sort_order" class="form-input" value="1">
+          </div>
+
+          <div class="form-group full-col">
+            <label class="form-label" for="prod-desc">Product Description</label>
+            <textarea id="prod-desc" name="description" class="form-textarea" placeholder="Detailed product description..."></textarea>
+          </div>
+
+          <div class="form-group full-col">
+            <label class="form-label">Product Image</label>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+              <input type="text" id="prod-img-url" name="image_url" class="form-input" placeholder="images/ataruti.png or https://...">
+              <label class="btn-sm btn-sm-outline" style="cursor: pointer; white-space: nowrap;">
+                Upload New Image
+                <input type="file" id="prod-img-file" accept="image/*" style="display: none;">
+              </label>
+            </div>
+            <div id="image-upload-status" style="font-size: 0.75rem; color: var(--admin-muted);"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Available for Order</label>
+            <select id="prod-avail" name="is_available" class="form-select">
+              <option value="true">Yes (Available)</option>
+              <option value="false">No (Sold out / Unavailable)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Storefront Visibility</label>
+            <select id="prod-visible" name="is_visible" class="form-select">
+              <option value="true">Visible on Website</option>
+              <option value="false">Hidden</option>
+            </select>
+          </div>
+
+          <div class="form-group full-col" style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 12px;">
+            <button type="button" class="btn btn-secondary" onclick="closeProductEditor()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="save-prod-btn">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../config/content.js"></script>
+  <script src="../js/supabase.js"></script>
+  <script>
+    let productsList = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Check auth
+      if (!window.USB_Supabase.getAdminSession()) {
+        window.location.href = 'index.html';
+        return;
+      }
+
+      await loadProductsTable();
+
+      // Check if URL has ?edit=ID
+      const params = new URLSearchParams(window.location.search);
+      const editId = params.get('edit');
+      if (editId) {
+        openProductEditor(editId);
+      }
+
+      document.getElementById('product-form').addEventListener('submit', handleProductSave);
+      document.getElementById('prod-img-file').addEventListener('change', handleImageUpload);
+    });
+
+    async function loadProductsTable() {
+      productsList = await window.USB_Supabase.getProducts();
+      const tbody = document.getElementById('products-table-body');
+      
+      tbody.innerHTML = productsList.map((p, idx) => {
+        const isAvail = p.is_available !== false;
+        const isVis = p.is_visible !== false;
+        return `
+          <tr>
+            <td><strong>#${p.sort_order || idx + 1}</strong></td>
+            <td>
+              <img src="../${p.image_url}" class="table-prod-thumb" alt="${p.name}" onerror="this.src='../images/ataruti.png';">
+            </td>
+            <td>
+              <strong>${p.name}</strong><br>
+              <small style="color: var(--admin-muted);">${p.bengali_name || p.bengaliName || ''}</small>
+            </td>
+            <td>
+              <span style="font-weight: 800; font-size: 1.1rem; color: var(--admin-text);">
+                ৳${(parseFloat(p.price) || 0).toFixed(2)}
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-gold">${p.badge || 'None'}</span>
+            </td>
+            <td>
+              <span class="status-tag ${isAvail ? 'completed' : 'new'}">
+                ${isAvail ? 'In Stock' : 'Out of Stock'}
+              </span>
+            </td>
+            <td>
+              <span class="status-tag ${isVis ? 'completed' : 'new'}">
+                ${isVis ? 'Visible' : 'Hidden'}
+              </span>
+            </td>
+            <td>
+              <div style="display: flex; gap: 8px;">
+                <button type="button" class="btn-sm btn-sm-gold" onclick="openProductEditor('${p.id}')">Edit</button>
+                <button type="button" class="btn-sm btn-sm-danger" onclick="deleteProduct('${p.id}')">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openProductEditor(productId) {
+      const modal = document.getElementById('product-editor-modal');
+      const title = document.getElementById('editor-modal-title');
+      const form = document.getElementById('product-form');
+      form.reset();
+
+      if (productId) {
+        const p = productsList.find(x => x.id === productId);
+        if (p) {
+          title.textContent = `Edit Product: ${p.name}`;
+          document.getElementById('prod-id').value = p.id;
+          document.getElementById('prod-name').value = p.name;
+          document.getElementById('prod-bengali-name').value = p.bengali_name || p.bengaliName || '';
+          document.getElementById('prod-slug').value = p.slug || '';
+          document.getElementById('prod-price').value = p.price || 0;
+          document.getElementById('prod-badge').value = p.badge || '';
+          document.getElementById('prod-sort').value = p.sort_order || 1;
+          document.getElementById('prod-desc').value = p.description || '';
+          document.getElementById('prod-img-url').value = p.image_url || '';
+          document.getElementById('prod-avail').value = p.is_available !== false ? 'true' : 'false';
+          document.getElementById('prod-visible').value = p.is_visible !== false ? 'true' : 'false';
+        }
+      } else {
+        title.textContent = 'Add New Product';
+        document.getElementById('prod-id').value = '';
+        document.getElementById('prod-price').value = '0.00';
+      }
+
+      modal.classList.add('active');
+    }
+
+    function closeProductEditor() {
+      document.getElementById('product-editor-modal').classList.remove('active');
+    }
+
+    async function handleImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById('image-upload-status');
+      statusEl.textContent = 'Uploading image...';
+
+      try {
+        const res = await window.USB_Supabase.uploadImage(file);
+        if (res.success && res.url) {
+          document.getElementById('prod-img-url').value = res.url;
+          statusEl.textContent = '✓ Image ready to save!';
+        }
+      } catch (err) {
+        statusEl.textContent = 'Upload error: ' + err.message;
+      }
+    }
+
+    async function handleProductSave(e) {
+      e.preventDefault();
+      const saveBtn = document.getElementById('save-prod-btn');
+      saveBtn.disabled = true;
+      saveBtn.textContent = 'Saving...';
+
+      const prodData = {
+        id: document.getElementById('prod-id').value || undefined,
+        name: document.getElementById('prod-name').value.trim(),
+        bengali_name: document.getElementById('prod-bengali-name').value.trim(),
+        slug: document.getElementById('prod-slug').value.trim().toLowerCase().replace(/\s+/g, '-'),
+        price: parseFloat(document.getElementById('prod-price').value) || 0.00,
+        badge: document.getElementById('prod-badge').value.trim(),
+        sort_order: parseInt(document.getElementById('prod-sort').value, 10) || 1,
+        description: document.getElementById('prod-desc').value.trim(),
+        image_url: document.getElementById('prod-img-url').value.trim() || 'images/ataruti.png',
+        is_available: document.getElementById('prod-avail').value === 'true',
+        is_visible: document.getElementById('prod-visible').value === 'true'
+      };
+
+      try {
+        await window.USB_Supabase.saveProduct(prodData);
+        closeProductEditor();
+        await loadProductsTable();
+        alert('Product updated successfully! Changes are live immediately.');
+      } catch (err) {
+        alert('Failed to save product: ' + err.message);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = 'Save Changes';
+      }
+    }
+
+    async function deleteProduct(productId) {
+      if (confirm('Are you sure you want to remove this product?')) {
+        await window.USB_Supabase.deleteProduct(productId);
+        await loadProductsTable();
+      }
+    }
+  </script>
+</body>
+</html>
