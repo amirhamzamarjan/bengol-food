@@ -116,7 +116,32 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.USB_WhatsApp.open(url);
     });
   });
+
+  // 8. Dynamic Cloud Content sync (from Supabase site_content)
+  loadDynamicSiteContent();
 });
+
+async function loadDynamicSiteContent() {
+  if (!window.USB_Supabase) return;
+  try {
+    const general = await window.USB_Supabase.getSiteContent('general_content');
+    if (general) {
+      if (general.hero_title) {
+        const h1 = document.querySelector('.hero-title');
+        if (h1) h1.innerHTML = general.hero_title.replace(/\n/g, '<br>');
+      }
+      if (general.hero_desc) {
+        const lead = document.querySelector('.hero-lead');
+        if (lead) lead.textContent = general.hero_desc;
+      }
+      if (general.phone && window.US_BENGOL_CONFIG?.contact) {
+        window.US_BENGOL_CONFIG.contact.phone = general.phone;
+      }
+    }
+  } catch (e) {
+    console.warn('Site content dynamic load notice:', e);
+  }
+}
 
 
 /**

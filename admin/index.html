@@ -24,11 +24,11 @@
       <form id="admin-login-form" style="display: flex; flex-direction: column; gap: 16px;">
         <div class="form-group">
           <label class="form-label" for="login-email">Email / Username</label>
-          <input type="text" id="login-email" class="form-input" required value="admin@usbengol.com">
+          <input type="text" id="login-email" class="form-input" required placeholder="admin@usbengol.com" autocomplete="username">
         </div>
         <div class="form-group">
           <label class="form-label" for="login-password">Password</label>
-          <input type="password" id="login-password" class="form-input" required value="admin123">
+          <input type="password" id="login-password" class="form-input" required placeholder="Enter password" autocomplete="current-password">
         </div>
         <div id="login-error-msg" style="display: none; color: #DC2626; font-size: 0.8125rem;"></div>
 
@@ -36,14 +36,11 @@
           Log In
         </button>
 
-        <div style="margin-top: 10px; padding: 12px; background: #FAF8F5; border-radius: 8px; font-size: 0.75rem; color: var(--admin-muted); line-height: 1.5;">
-          <strong>Demo credentials pre-filled:</strong><br>
-          User: <code>admin@usbengol.com</code> · Pass: <code>admin123</code><br>
-          <em>(Connect your Supabase project in Settings for cloud auth)</em>
-        </div>
-
-        <div style="text-align: center; margin-top: 10px;">
-          <a href="../index.html" style="font-size: 0.8125rem; color: var(--admin-muted); text-decoration: underline;">← Return to Storefront</a>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8125rem;">
+          <button type="button" onclick="openResetPasswordModal()" style="background: none; border: none; color: var(--color-gold); cursor: pointer; text-decoration: underline; padding: 0; font-size: 0.8125rem; font-weight: 600;">
+            🔑 Set or Change Password
+          </button>
+          <a href="../index.html" style="color: var(--admin-muted); text-decoration: underline;">← Return to Storefront</a>
         </div>
       </form>
     </div>
@@ -82,6 +79,9 @@
       </nav>
 
       <div class="admin-sidebar-footer">
+        <button type="button" onclick="openResetPasswordModal()" class="admin-nav-item" style="background: none; border: none; cursor: pointer; text-align: left; width: 100%; color: var(--color-gold); margin-bottom: 4px;">
+          🔑 Change Password
+        </button>
         <a href="/index.html" target="_blank" class="admin-nav-item" style="color: var(--color-gold);">
           ↗ View Storefront
         </a>
@@ -95,12 +95,17 @@
     <main class="admin-main">
       <div class="admin-topbar">
         <h1 class="admin-topbar-title">Dashboard Overview</h1>
-        <div class="admin-user-pill">
-          <span class="admin-status-badge badge-online" id="db-status-pill">
-            <span style="width: 6px; height: 6px; border-radius: 50%; background: currentColor;"></span>
-            Data Layer Active
-          </span>
-          <span id="current-user-email">admin@usbengol.com</span>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <button type="button" class="btn btn-sm" onclick="openResetPasswordModal()" style="border: 1px solid var(--admin-border); background: #FFF; font-size: 0.8125rem; padding: 6px 12px; border-radius: 6px; cursor: pointer; color: var(--admin-primary); font-weight: 600;">
+            🔒 Change Password
+          </button>
+          <div class="admin-user-pill">
+            <span class="admin-status-badge badge-online" id="db-status-pill">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: currentColor;"></span>
+              Data Layer Active
+            </span>
+            <span id="current-user-email">admin@usbengol.com</span>
+          </div>
         </div>
       </div>
 
@@ -174,6 +179,44 @@
         </div>
       </div>
     </main>
+  </div>
+
+  <!-- Change/Set Password Modal -->
+  <div class="modal-backdrop" id="password-modal" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <button type="button" class="modal-close-btn" onclick="closeResetPasswordModal()">✕</button>
+      <div class="modal-body">
+        <h3 class="modal-title" style="margin-bottom: 8px;">Admin Password Security</h3>
+        <p style="font-size: 0.85rem; color: var(--admin-muted); margin-bottom: 20px;">
+          নতুন পাসওয়ার্ড সেট করুন। এটি সরাসরি ক্লাউড ডাটাবেজে সেভ হবে এবং আপনার মোবাইল, কম্পিউটার সহ সকল ডিভাইসে কাজ করবে।
+        </p>
+
+        <form id="password-change-form" style="display: flex; flex-direction: column; gap: 14px;">
+          <div class="form-group" id="curr-pass-group">
+            <label class="form-label" for="curr-password">বর্তমান পাসওয়ার্ড (Current Password)</label>
+            <input type="password" id="curr-password" class="form-input" placeholder="প্রথমবার সেট করলে খালি রাখতে পারেন">
+            <small style="color: var(--admin-muted); font-size: 0.75rem;">(ডিফল্ট পাসওয়ার্ড: admin123 অথবা প্রথমবার হলে খালি রাখুন)</small>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="new-password">নতুন পাসওয়ার্ড (New Password) <span class="req">*</span></label>
+            <input type="password" id="new-password" class="form-input" required placeholder="কমপক্ষে ৪ অক্ষরের পাসওয়ার্ড">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="confirm-password">নতুন পাসওয়ার্ড নিশ্চিত করুন (Confirm Password) <span class="req">*</span></label>
+            <input type="password" id="confirm-password" class="form-input" required placeholder="নতুন পাসওয়ার্ড আবার লিখুন">
+          </div>
+
+          <div id="pass-modal-msg" style="display: none; padding: 10px; border-radius: 6px; font-size: 0.8125rem;"></div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+            <button type="button" class="btn btn-secondary" onclick="closeResetPasswordModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="save-pass-btn">Save New Password</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -290,6 +333,61 @@
         }
       }
     }
+
+    function openResetPasswordModal() {
+      const modal = document.getElementById('password-modal');
+      if (modal) modal.classList.add('active');
+      const form = document.getElementById('password-change-form');
+      if (form) form.reset();
+      const msg = document.getElementById('pass-modal-msg');
+      if (msg) msg.style.display = 'none';
+    }
+
+    function closeResetPasswordModal() {
+      const modal = document.getElementById('password-modal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    document.getElementById('password-change-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const curr = document.getElementById('curr-password').value.trim();
+      const next = document.getElementById('new-password').value.trim();
+      const conf = document.getElementById('confirm-password').value.trim();
+      const msg = document.getElementById('pass-modal-msg');
+      const btn = document.getElementById('save-pass-btn');
+
+      if (next !== conf) {
+        msg.textContent = 'নতুন পাসওয়ার্ড দুটি মিলছে না! অনুগ্রহ করে চেক করে আবার টাইপ করুন।';
+        msg.style.background = '#FEE2E2';
+        msg.style.color = '#DC2626';
+        msg.style.display = 'block';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving to Cloud...';
+
+      try {
+        const res = await window.USB_Supabase.changeAdminPassword(next, curr);
+        msg.textContent = '✓ ' + (res.message || 'পাসওয়ার্ড সফলভাবে ক্লাউডে সেভ হয়েছে! সকল ডিভাইসে এখন এই পাসওয়ার্ড প্রযোজ্য।');
+        msg.style.background = '#ECFDF5';
+        msg.style.color = '#047857';
+        msg.style.display = 'block';
+
+        setTimeout(() => {
+          closeResetPasswordModal();
+          window.location.reload();
+        }, 1400);
+      } catch (err) {
+        msg.textContent = 'ভুল: ' + err.message;
+        msg.style.background = '#FEE2E2';
+        msg.style.color = '#DC2626';
+        msg.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save New Password';
+      }
+    });
   </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Site Content | US BENGOL Admin</title>
+  <title>Manage Site Content & Media | US BENGOL Admin</title>
   <link rel="icon" type="image/png" href="../images/logo2.png">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/admin.css">
@@ -43,6 +43,7 @@
     </nav>
 
     <div class="admin-sidebar-footer">
+      <a href="/admin/index.html" class="admin-nav-item" style="color: var(--color-gold);">🔑 Security & Password</a>
       <a href="/index.html" target="_blank" class="admin-nav-item" style="color: var(--color-gold);">↗ View Storefront</a>
     </div>
   </aside>
@@ -50,11 +51,15 @@
   <!-- Main Content -->
   <main class="admin-main">
     <div class="admin-topbar">
-      <h1 class="admin-topbar-title">Site Content Management</h1>
-      <button type="button" class="btn btn-primary btn-sm" onclick="saveAllContent()">Save All Content</button>
+      <h1 class="admin-topbar-title">Site Content & Photography</h1>
+      <button type="button" class="btn btn-primary btn-sm" id="save-content-btn" onclick="saveAllContent()">
+        💾 Save All Changes to Cloud
+      </button>
     </div>
 
     <div class="admin-content">
+      <div id="content-status-banner" style="display: none; margin-bottom: 20px; padding: 14px 20px; border-radius: 8px; font-size: 0.875rem;"></div>
+
       <div class="admin-card">
         <h2 class="admin-card-title" style="margin-bottom: 20px;">1. Hero Section Content</h2>
         <div class="form-grid">
@@ -64,7 +69,7 @@
           </div>
           <div class="form-group full-col">
             <label class="form-label">Hero Description</label>
-            <textarea id="cfg-hero-desc" class="form-textarea">US BENGOL brings familiar Bangladeshi roti and parota to modern homes with unhurried homemade care, authentic textures, and convenient nationwide delivery.</textarea>
+            <textarea id="cfg-hero-desc" class="form-textarea" rows="3">US BENGOL brings familiar Bangladeshi roti and parota to modern homes with unhurried homemade care, authentic textures, and convenient nationwide delivery.</textarea>
           </div>
         </div>
       </div>
@@ -81,23 +86,23 @@
             <input type="text" id="cfg-delivery" class="form-input" value="Nationwide across Bangladesh">
           </div>
           <div class="form-group full-col">
-            <label class="form-label">Kitchen & Factory Address (Production)</label>
+            <label class="form-label">Kitchen & Factory Address (Production Facility)</label>
             <input type="text" id="cfg-factory-address" class="form-input" value="Ullapara, Sirajganj, Bangladesh">
           </div>
           <div class="form-group full-col">
-            <label class="form-label">Dhaka Dispatch Hub Address (Fulfillment)</label>
+            <label class="form-label">Dhaka Dispatch Hub Address (Fulfillment & Delivery)</label>
             <input type="text" id="cfg-address" class="form-input" value="Bawgan, Uttarkhan, Dhaka 1230, Bangladesh">
           </div>
         </div>
       </div>
 
       <div class="admin-card">
-        <h2 class="admin-card-title" style="margin-bottom: 20px;">3. Central Preparation Photography (5 Stages)</h2>
-        <p style="font-size: 0.875rem; color: var(--admin-muted); margin-bottom: 20px;">
-          These 5 stages correspond to the temporary images in <code>config/content.js</code>. When your professional studio photography is ready, simply paste the image path or URL here:
+        <h2 class="admin-card-title" style="margin-bottom: 12px;">3. Central Preparation Photography (5 Stages)</h2>
+        <p style="font-size: 0.875rem; color: var(--admin-muted); margin-bottom: 24px;">
+          প্রতিটি স্টেজের জন্য আপনার মোবাইল বা ক্যামেরা থেকে সরাসরি ছবি আপলোড করুন। আপলোডকৃত ছবি স্বয়ংক্রিয়ভাবে ক্লাউড সিডিএন-এ হোস্ট হবে এবং ওয়েবসাইটে লাইভ দেখাবে।
         </p>
         <div class="form-grid" id="prep-stages-editor">
-          <!-- Rendered via JS -->
+          <!-- Populated via JS -->
         </div>
       </div>
     </div>
@@ -107,42 +112,188 @@
   <script src="../config/content.js"></script>
   <script src="../js/supabase.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    let activePrepStages = [];
+
+    document.addEventListener('DOMContentLoaded', async () => {
       if (!window.USB_Supabase.getAdminSession()) {
         window.location.href = '/admin/index.html';
         return;
       }
 
-      renderPrepFields();
+      await loadCloudSiteContent();
     });
+
+    async function loadCloudSiteContent() {
+      // 1. Load General Content
+      try {
+        const general = await window.USB_Supabase.getSiteContent('general_content');
+        if (general) {
+          if (general.hero_title) document.getElementById('cfg-hero-title').value = general.hero_title;
+          if (general.hero_desc) document.getElementById('cfg-hero-desc').value = general.hero_desc;
+          if (general.phone) document.getElementById('cfg-phone').value = general.phone;
+          if (general.delivery) document.getElementById('cfg-delivery').value = general.delivery;
+          if (general.factory_address) document.getElementById('cfg-factory-address').value = general.factory_address;
+          if (general.address) document.getElementById('cfg-address').value = general.address;
+        }
+      } catch (e) {
+        console.warn('Could not load general content:', e);
+      }
+
+      // 2. Load Preparation Stages
+      try {
+        const cloudPrep = await window.USB_Supabase.getSiteContent('preparation_stages');
+        if (cloudPrep && Array.isArray(cloudPrep) && cloudPrep.length > 0) {
+          activePrepStages = cloudPrep;
+        } else {
+          activePrepStages = window.US_BENGOL_CONFIG?.preparation || [];
+        }
+      } catch (e) {
+        activePrepStages = window.US_BENGOL_CONFIG?.preparation || [];
+      }
+
+      renderPrepFields();
+    }
 
     function renderPrepFields() {
       const container = document.getElementById('prep-stages-editor');
-      const steps = window.US_BENGOL_CONFIG?.preparation || [];
+      container.innerHTML = activePrepStages.map((s, idx) => {
+        const imgSrc = s.image ? (s.image.startsWith('http') || s.image.startsWith('/') ? s.image : `../${s.image}`) : '../images/prep/prep-1-quality.jpg';
 
-      container.innerHTML = steps.map((s, idx) => `
-        <div class="form-group full-col" style="background: #FAF8F5; padding: 16px; border-radius: 8px; border: 1px solid var(--admin-border);">
-          <div style="font-weight: 700; color: var(--admin-primary); margin-bottom: 6px;">STAGE ${s.step}: ${s.title}</div>
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px;">
-            <div>
-              <label class="form-label">Title</label>
-              <input type="text" id="prep-title-${idx}" class="form-input" value="${s.title}">
+        return `
+          <div class="form-group full-col" style="background: #FAF8F5; padding: 20px; border-radius: 12px; border: 1.5px solid var(--admin-border); margin-bottom: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+              <span style="font-weight: 800; color: var(--admin-primary); font-size: 0.95rem;">STAGE ${s.step || `0${idx+1}`}: ${s.title}</span>
+              <span id="prep-status-${idx}" style="font-size: 0.8125rem; font-weight: 600;"></span>
             </div>
+
+            <div style="display: grid; grid-template-columns: 100px 1fr; gap: 18px; align-items: start; margin-bottom: 16px;">
+              <div>
+                <img 
+                  id="prep-preview-${idx}" 
+                  src="${imgSrc}" 
+                  alt="${s.title}" 
+                  style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid var(--admin-border); background: #FFF;"
+                  onerror="this.src='../images/prep/prep-1-quality.jpg';"
+                >
+              </div>
+
+              <div>
+                <label class="form-label" style="margin-bottom: 6px;">Stage Photography Image</label>
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 6px;">
+                  <input type="text" id="prep-img-${idx}" class="form-input" style="flex: 1; min-width: 220px;" value="${s.image || ''}" placeholder="Image URL or path">
+                  <label class="btn btn-gold btn-sm" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; margin: 0;">
+                    📷 Upload Image
+                    <input type="file" accept="image/*" style="display: none;" onchange="handlePrepUpload(${idx}, event)">
+                  </label>
+                </div>
+                <small style="color: var(--admin-muted); font-size: 0.75rem;">JPG, PNG, WebP supported. Direct upload to Supabase cloud storage.</small>
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 12px;">
+              <div>
+                <label class="form-label">English Stage Title</label>
+                <input type="text" id="prep-title-${idx}" class="form-input" value="${s.title || ''}">
+              </div>
+              <div>
+                <label class="form-label">Bengali Title (বাংলা শিরোনাম)</label>
+                <input type="text" id="prep-bengali-${idx}" class="form-input" value="${s.bengaliTitle || ''}" placeholder="ঐতিহ্যের ছোঁয়া">
+              </div>
+            </div>
+
             <div>
-              <label class="form-label">Image Path / URL (TEMP_PREP_IMAGE_0${idx+1})</label>
-              <input type="text" id="prep-img-${idx}" class="form-input" value="${s.image}">
+              <label class="form-label">Stage Description</label>
+              <textarea id="prep-desc-${idx}" class="form-textarea" rows="2">${s.description || ''}</textarea>
             </div>
           </div>
-          <div>
-            <label class="form-label">Description</label>
-            <input type="text" id="prep-desc-${idx}" class="form-input" value="${s.description}">
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    function saveAllContent() {
-      alert('Content configurations saved! For production deployments, modifications in config/content.js or Supabase site_content take effect across all visitors.');
+    async function handlePrepUpload(idx, e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById(`prep-status-${idx}`);
+      if (statusEl) {
+        statusEl.textContent = 'Uploading to cloud...';
+        statusEl.style.color = '#D97706';
+      }
+
+      try {
+        const res = await window.USB_Supabase.uploadImage(file, 'product-images');
+        if (res.success && res.url) {
+          document.getElementById(`prep-img-${idx}`).value = res.url;
+          document.getElementById(`prep-preview-${idx}`).src = res.url;
+          if (statusEl) {
+            statusEl.textContent = '✓ Uploaded successfully!';
+            statusEl.style.color = '#16A34A';
+          }
+        } else {
+          if (statusEl) {
+            statusEl.textContent = 'Upload failed: ' + (res.error || 'Network error');
+            statusEl.style.color = '#DC2626';
+          }
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.textContent = 'Error: ' + err.message;
+          statusEl.style.color = '#DC2626';
+        }
+      }
+    }
+
+    async function saveAllContent() {
+      const btn = document.getElementById('save-content-btn');
+      btn.disabled = true;
+      btn.textContent = 'Saving to Supabase Cloud...';
+
+      const banner = document.getElementById('content-status-banner');
+
+      // 1. Collect General Content
+      const generalData = {
+        hero_title: document.getElementById('cfg-hero-title').value.trim(),
+        hero_desc: document.getElementById('cfg-hero-desc').value.trim(),
+        phone: document.getElementById('cfg-phone').value.trim(),
+        delivery: document.getElementById('cfg-delivery').value.trim(),
+        factory_address: document.getElementById('cfg-factory-address').value.trim(),
+        address: document.getElementById('cfg-address').value.trim(),
+        updated_at: new Date().toISOString()
+      };
+
+      // 2. Collect Preparation Stages
+      const prepData = activePrepStages.map((s, idx) => ({
+        step: s.step || `0${idx+1}`,
+        title: (document.getElementById(`prep-title-${idx}`)?.value || s.title).trim(),
+        bengaliTitle: (document.getElementById(`prep-bengali-${idx}`)?.value || s.bengaliTitle || '').trim(),
+        description: (document.getElementById(`prep-desc-${idx}`)?.value || s.description).trim(),
+        image: (document.getElementById(`prep-img-${idx}`)?.value || s.image).trim(),
+        alt: s.alt || s.title
+      }));
+
+      try {
+        await window.USB_Supabase.saveSiteContent('general_content', generalData);
+        await window.USB_Supabase.saveSiteContent('preparation_stages', prepData);
+
+        banner.style.display = 'block';
+        banner.style.background = '#ECFDF5';
+        banner.style.color = '#047857';
+        banner.style.border = '1px solid #A7F3D0';
+        banner.textContent = '✓ সকল কনটেন্ট এবং আপলোডকৃত ছবি সফলভাবে ক্লাউড ডাটাবেজে সেভ হয়েছে!';
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        alert('All site content and images saved successfully! Live across all visitors.');
+      } catch (err) {
+        banner.style.display = 'block';
+        banner.style.background = '#FEE2E2';
+        banner.style.color = '#DC2626';
+        banner.style.border = '1px solid #FECACA';
+        banner.textContent = 'ভুল: ' + err.message;
+        alert('Failed to save content: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 Save All Changes to Cloud';
+      }
     }
   </script>
 </body>

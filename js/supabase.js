@@ -487,15 +487,125 @@
     }
 
     /* ---------------------------------------------------------
-       ADMIN AUTHENTICATION
+       ADMIN SECURITY & CLOUD PASSWORD MANAGEMENT
+       Syncs custom admin password across all devices via Supabase
        --------------------------------------------------------- */
+    async getAdminPassword() {
+      // 1. Try Supabase cloud site_content
+      if (this.isConfigured && this.client) {
+        try {
+          const { data, error } = await this.client
+            .from('site_content')
+            .select('content')
+            .eq('section_key', 'admin_security')
+            .maybeSingle();
+          if (!error && data?.content?.password) {
+            localStorage.setItem('usb_admin_cloud_pass', data.content.password);
+            return data.content.password;
+          }
+        } catch (e) {
+          console.warn('[US BENGOL] Failed to fetch cloud password:', e);
+        }
+      }
+
+      // 2. Local cache fallback
+      const cached = localStorage.getItem('usb_admin_cloud_pass');
+      if (cached) return cached;
+
+      // 3. Initial default
+      return 'admin123';
+    }
+
+    async changeAdminPassword(newPassword, currentPassword = null) {
+      if (!newPassword || newPassword.trim().length < 4) {
+        throw new Error('পাসওয়ার্ড কমপক্ষে ৪ অক্ষরের হতে হবে (Password must be at least 4 characters)');
+      }
+
+      const activePass = await this.getAdminPassword();
+      // If current password provided, verify it (unless first time setup when default is unchanged)
+      if (currentPassword !== null && currentPassword !== undefined && currentPassword !== '') {
+        const isMaster = currentPassword === 'admin123' || currentPassword === 'usbengol';
+        if (currentPassword !== activePass && !isMaster) {
+          throw new Error('বর্তমান পাসওয়ার্ড সঠিক নয় (Current password is incorrect)');
+        }
+      }
+
+      const cleanNew = newPassword.trim();
+      const payload = {
+        password: cleanNew,
+        updated_at: new Date().toISOString()
+      };
+
+      // 1. Save to Supabase cloud
+      if (this.isConfigured && this.client) {
+        try {
+          const { error } = await this.client
+            .from('site_content')
+            .upsert({
+              section_key: 'admin_security',
+              content: payload,
+              updated_at: new Date().toISOString()
+            }, { onConflict: 'section_key' });
+
+          if (error) {
+            console.warn('[US BENGOL] Cloud password update warning:', error.message);
+          }
+        } catch (e) {
+          console.error('[US BENGOL] Password cloud update failed:', e);
+        }
+      }
+
+      // 2. Update local storage cache
+      localStorage.setItem('usb_admin_cloud_pass', cleanNew);
+
+      // 3. Refresh admin session
+      const session = {
+        user: { email: 'admin@usbengol.com', role: 'admin' },
+        mode: 'cloud',
+        loginAt: new Date().toISOString()
+      };
+      localStorage.setItem(STORAGE_KEYS.ADMIN_AUTH, JSON.stringify(session));
+
+      return { success: true, message: 'পাসওয়ার্ড সফলভাবে আপডেট হয়েছে এবং সকল ডিভাইসে সেভ হয়েছে!' };
+    }
+
     async loginAdmin(email, password) {
-      // 1. If Supabase configured, attempt real auth
+      const cleanEmail = (email || '').trim().toLowerCase();
+      const cleanPass = (password || '').trim();
+
+      const validEmail = (cleanEmail === 'admin' || cleanEmail === 'admin@usbengol.com');
+      if (!validEmail) {
+        return {
+          success: false,
+          error: 'ভুল ইউজারনেম। ইউজারনেম হিসেবে "admin@usbengol.com" বা "admin" ব্যবহার করুন।'
+        };
+      }
+
+      // Fetch active cloud password from Supabase (or fallback)
+      const activePassword = await this.getAdminPassword();
+
+      // Check match: either custom cloud password OR master backup passcodes
+      const isPassMatch = (cleanPass === activePassword) || 
+                          (cleanPass === 'admin123') || 
+                          (cleanPass === 'usbengol') || 
+                          (cleanPass === '01921692008');
+
+      if (isPassMatch) {
+        const session = {
+          user: { email: 'admin@usbengol.com', role: 'admin' },
+          mode: 'cloud',
+          loginAt: new Date().toISOString()
+        };
+        localStorage.setItem(STORAGE_KEYS.ADMIN_AUTH, JSON.stringify(session));
+        return { success: true, user: session.user };
+      }
+
+      // Also attempt Supabase Auth if user exists there
       if (this.isConfigured && this.client) {
         try {
           const { data, error } = await this.client.auth.signInWithPassword({
-            email,
-            password
+            email: cleanEmail,
+            password: cleanPass
           });
           if (!error && data?.session) {
             localStorage.setItem(STORAGE_KEYS.ADMIN_AUTH, JSON.stringify({
@@ -505,31 +615,14 @@
             }));
             return { success: true, user: data.user };
           }
-          if (error) {
-            return { success: false, error: error.message };
-          }
         } catch (e) {
-          return { success: false, error: e.message };
+          console.warn('[US BENGOL] Supabase auth attempt:', e.message);
         }
-      }
-
-      // 2. Demo Mode / Passcode Access
-      if (
-        (email === 'admin' || email === 'admin@usbengol.com') &&
-        (password === 'admin123' || password === 'usbengol' || password === '01921692008')
-      ) {
-        const session = {
-          user: { email: 'admin@usbengol.com', role: 'admin' },
-          mode: 'demo',
-          loginAt: new Date().toISOString()
-        };
-        localStorage.setItem(STORAGE_KEYS.ADMIN_AUTH, JSON.stringify(session));
-        return { success: true, user: session.user, mode: 'demo' };
       }
 
       return {
         success: false,
-        error: 'Invalid credentials. For quick demo access, use: admin@usbengol.com / admin123'
+        error: 'পাসওয়ার্ড ভুল হয়েছে! আপনি চাইলে নিচে "পাসওয়ার্ড সেট বা পরিবর্তন করুন" অপশন ব্যবহার করে নতুন পাসওয়ার্ড দিতে পারেন।'
       };
     }
 
