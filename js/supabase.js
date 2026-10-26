@@ -49,8 +49,8 @@
 
     getConfig() {
       return {
-        url: localStorage.getItem(STORAGE_KEYS.SUPABASE_URL) || '',
-        key: localStorage.getItem(STORAGE_KEYS.SUPABASE_KEY) || '',
+        url: localStorage.getItem(STORAGE_KEYS.SUPABASE_URL) || window.US_BENGOL_CONFIG?.supabase?.url || '',
+        key: localStorage.getItem(STORAGE_KEYS.SUPABASE_KEY) || window.US_BENGOL_CONFIG?.supabase?.anonKey || '',
         isConfigured: this.isConfigured
       };
     }

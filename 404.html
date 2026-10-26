@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Page Not Found (404) | US BENGOL</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="icon" type="image/png" href="images/logo2.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Serif+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    .error-page-wrapper {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+      background: radial-gradient(circle at 50% 20%, rgba(212, 160, 23, 0.08) 0%, rgba(251, 249, 245, 1) 70%),
+                  linear-gradient(180deg, #FBF9F5 0%, #F5EFEB 100%);
+    }
+    .error-card {
+      max-width: 520px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(212, 195, 172, 0.6);
+      border-radius: var(--radius-lg, 24px);
+      padding: clamp(32px, 6vw, 54px) clamp(24px, 5vw, 44px);
+      box-shadow: 0 12px 36px rgba(44, 30, 22, 0.08);
+    }
+    .error-brand-logo {
+      height: 48px;
+      width: auto;
+      margin-bottom: 24px;
+      object-fit: contain;
+    }
+    .error-code {
+      font-size: clamp(3.5rem, 8vw, 5rem);
+      font-weight: 800;
+      line-height: 1;
+      color: var(--color-gold, #C88A2C);
+      margin-bottom: 12px;
+      letter-spacing: -0.04em;
+    }
+    .error-title {
+      font-size: clamp(1.25rem, 2.5vw, 1.65rem);
+      font-weight: 700;
+      color: var(--color-brown-900, #2C1E16);
+      margin-bottom: 8px;
+    }
+    .error-bengali {
+      font-family: 'Noto Serif Bengali', serif;
+      font-size: 1rem;
+      color: var(--color-gold, #C88A2C);
+      margin-bottom: 16px;
+    }
+    .error-desc {
+      font-size: 0.9375rem;
+      color: var(--color-brown-700, #5C4A3E);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .error-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body class="error-page-body">
+  <main class="error-page-wrapper">
+    <div class="error-card">
+      <a href="/index.html" aria-label="US BENGOL Home">
+        <img src="images/logo2.png" alt="US BENGOL" class="error-brand-logo">
+      </a>
+      
+      <div class="error-code">404</div>
+      <h1 class="error-title">Page Not Found</h1>
+      <div class="error-bengali">পৃষ্ঠাটি খুঁজে পাওয়া যায়নি</div>
+      
+      <p class="error-desc">
+        The link you followed may be broken or the page may have been removed. Let's get you back to our traditional fresh roti collection.
+      </p>
+
+      <div class="error-actions">
+        <a href="/index.html" class="btn btn-primary">Return to Home</a>
+        <a href="/index.html#products" class="btn btn-secondary">Explore Products</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

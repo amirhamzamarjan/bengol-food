@@ -86,12 +86,14 @@ ALTER TABLE public.bulk_orders ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.site_content ENABLE ROW LEVEL SECURITY;
 
 -- Products: Everyone can view visible products
+DROP POLICY IF EXISTS "Allow public read access to visible products" ON public.products;
 CREATE POLICY "Allow public read access to visible products"
     ON public.products
     FOR SELECT
     USING (is_visible = true OR auth.role() = 'authenticated');
 
 -- Products: Only authenticated admin can insert, update, delete
+DROP POLICY IF EXISTS "Allow authenticated admin full access to products" ON public.products;
 CREATE POLICY "Allow authenticated admin full access to products"
     ON public.products
     FOR ALL
@@ -99,12 +101,14 @@ CREATE POLICY "Allow authenticated admin full access to products"
     WITH CHECK (auth.role() = 'authenticated');
 
 -- Gallery: Everyone can view published gallery items
+DROP POLICY IF EXISTS "Allow public read access to published gallery" ON public.gallery;
 CREATE POLICY "Allow public read access to published gallery"
     ON public.gallery
     FOR SELECT
     USING (is_published = true OR auth.role() = 'authenticated');
 
 -- Gallery: Only authenticated admin can insert, update, delete
+DROP POLICY IF EXISTS "Allow authenticated admin full access to gallery" ON public.gallery;
 CREATE POLICY "Allow authenticated admin full access to gallery"
     ON public.gallery
     FOR ALL
@@ -112,12 +116,14 @@ CREATE POLICY "Allow authenticated admin full access to gallery"
     WITH CHECK (auth.role() = 'authenticated');
 
 -- Bulk Orders: Anyone can submit a bulk order request
+DROP POLICY IF EXISTS "Allow public insert of bulk orders" ON public.bulk_orders;
 CREATE POLICY "Allow public insert of bulk orders"
     ON public.bulk_orders
     FOR INSERT
     WITH CHECK (true);
 
 -- Bulk Orders: Only authenticated admin can view or modify bulk requests
+DROP POLICY IF EXISTS "Allow authenticated admin full access to bulk orders" ON public.bulk_orders;
 CREATE POLICY "Allow authenticated admin full access to bulk orders"
     ON public.bulk_orders
     FOR ALL
@@ -125,12 +131,14 @@ CREATE POLICY "Allow authenticated admin full access to bulk orders"
     WITH CHECK (auth.role() = 'authenticated');
 
 -- Site Content: Public can view content
+DROP POLICY IF EXISTS "Allow public read access to site content" ON public.site_content;
 CREATE POLICY "Allow public read access to site content"
     ON public.site_content
     FOR SELECT
     USING (true);
 
 -- Site Content: Only authenticated admin can edit site content
+DROP POLICY IF EXISTS "Allow authenticated admin to update site content" ON public.site_content;
 CREATE POLICY "Allow authenticated admin to update site content"
     ON public.site_content
     FOR ALL
@@ -169,14 +177,14 @@ ON CONFLICT (section_key) DO NOTHING;
 -- -------------------------------------------------------------------------
 INSERT INTO public.gallery (id, title, description, image_url, sort_order, is_published)
 VALUES
-    ('g1111111-1111-4111-8111-111111111111', 'Finest Grain Selection', 'Pristine whole wheat and refined flours selected for natural aroma and taste.', 'images/prep/prep-1-quality.jpg', 1, true),
-    ('g2222222-2222-4222-8222-222222222222', 'Gentle Kneading Process', 'Hydrated and kneaded to exact consistency to ensure softness in every bite.', 'images/prep/prep-2-dough.jpg', 2, true),
-    ('g3333333-3333-4333-8333-333333333333', 'Artisanal Rolling Technique', 'Delicate and round flatbreads shaped with traditional hand-guided technique.', 'images/prep/prep-3-rolling.jpg', 3, true),
-    ('g4444444-4444-4444-8444-444444444444', 'Traditional Baking Heat', 'Slow-toasted over controlled flame until naturally puffed and aromatic.', 'images/prep/prep-4-cooking.png', 4, true),
-    ('g5555555-5555-4555-8555-555555555555', 'Fresh Warm Stacks', 'Hot rotis layered carefully to retain moisture and authentic comforting texture.', 'images/prep/prep-5-serving.png', 5, true),
-    ('g6666666-6666-4666-8666-666666666666', 'Wholesome Atta Roti', 'Whole wheat goodness ready to anchor daily breakfast and dinner tables.', 'images/ataruti.png', 6, true),
-    ('g7777777-7777-4777-8777-777777777777', 'Tender Maida Roti', 'Silky, tender white flour roti for effortless folding and pairing.', 'images/moydaruti.png', 7, true),
-    ('g8888888-8888-4888-8888-888888888888', 'Flaky Golden Parota', 'Multi-layered with signature golden crispness outside and tender inside folds.', 'images/porota.png', 8, true)
+    ('b1111111-1111-4111-8111-111111111111', 'Finest Grain Selection', 'Pristine whole wheat and refined flours selected for natural aroma and taste.', 'images/prep/prep-1-quality.jpg', 1, true),
+    ('b2222222-2222-4222-8222-222222222222', 'Gentle Kneading Process', 'Hydrated and kneaded to exact consistency to ensure softness in every bite.', 'images/prep/prep-2-dough.jpg', 2, true),
+    ('b3333333-3333-4333-8333-333333333333', 'Artisanal Rolling Technique', 'Delicate and round flatbreads shaped with traditional hand-guided technique.', 'images/prep/prep-3-rolling.jpg', 3, true),
+    ('b4444444-4444-4444-8444-444444444444', 'Traditional Baking Heat', 'Slow-toasted over controlled flame until naturally puffed and aromatic.', 'images/prep/prep-4-cooking.png', 4, true),
+    ('b5555555-5555-4555-8555-555555555555', 'Fresh Warm Stacks', 'Hot rotis layered carefully to retain moisture and authentic comforting texture.', 'images/prep/prep-5-serving.png', 5, true),
+    ('b6666666-6666-4666-8666-666666666666', 'Wholesome Atta Roti', 'Whole wheat goodness ready to anchor daily breakfast and dinner tables.', 'images/ataruti.png', 6, true),
+    ('b7777777-7777-4777-8777-777777777777', 'Tender Maida Roti', 'Silky, tender white flour roti for effortless folding and pairing.', 'images/moydaruti.png', 7, true),
+    ('b8888888-8888-4888-8888-888888888888', 'Flaky Golden Parota', 'Multi-layered with signature golden crispness outside and tender inside folds.', 'images/porota.png', 8, true)
 ON CONFLICT (id) DO UPDATE
 SET
     title = EXCLUDED.title,

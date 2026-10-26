@@ -27,8 +27,8 @@ window.US_BENGOL_CONFIG = {
   // (Paste your Supabase credentials here, OR set them via Admin > Settings)
   // =========================================================================
   supabase: {
-    url: "",      // e.g. "https://your-project-id.supabase.co"
-    anonKey: ""   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." (Public Anon Key)
+    url: "https://xnoveggueuxvwzmlnidk.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inhub3ZlZ2d1ZXV4dnd6bWxuaWRrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTMwMTE3MTQsImV4cCI6MjEwODU4NzcxNH0.ZsyLL86kleZTBYJpDLBtQy7WSgbPls_L7EN4tzLrSNc"
   },
 
   // =========================================================================

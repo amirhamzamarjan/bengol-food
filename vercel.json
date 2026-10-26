@@ -6,6 +6,50 @@
     {
       "source": "/product/:slug",
       "destination": "/product.html?slug=:slug"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/admin/products",
+      "destination": "/admin/products.html"
+    },
+    {
+      "source": "/admin/gallery",
+      "destination": "/admin/gallery.html"
+    },
+    {
+      "source": "/admin/requests",
+      "destination": "/admin/requests.html"
+    },
+    {
+      "source": "/admin/content",
+      "destination": "/admin/content.html"
+    },
+    {
+      "source": "/admin/settings",
+      "destination": "/admin/index.html"
+    },
+    {
+      "source": "/products",
+      "destination": "/admin/products.html"
+    },
+    {
+      "source": "/gallery",
+      "destination": "/admin/gallery.html"
+    },
+    {
+      "source": "/requests",
+      "destination": "/admin/requests.html"
+    },
+    {
+      "source": "/content",
+      "destination": "/admin/content.html"
+    },
+    {
+      "source": "/settings",
+      "destination": "/admin/index.html"
     }
   ],
   "headers": [
