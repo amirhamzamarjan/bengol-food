@@ -65,9 +65,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // 2. Render "How We Prepare" Steps from Central Configuration
-  renderPreparationSteps();
-
   // 3. Render Why Us Pillars & Bulk Audiences from Central Configuration
   renderWhyUsPillars();
   renderBulkAudiences();
@@ -75,6 +72,21 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 4. Initialize Data & Products
   if (window.USB_Products) {
     await window.USB_Products.init();
+  }
+
+  // 4b. Initialize Pill Navigation
+  if (window.USB_PillNav) {
+    window.USB_PillNav.init();
+  }
+
+  // 4c. Initialize Scroll-Driven Production Story
+  if (window.USB_ProductionStory) {
+    window.USB_ProductionStory.init();
+  }
+
+  // 4d. Initialize Gallery
+  if (window.USB_Gallery) {
+    await window.USB_Gallery.init();
   }
 
   // 5. Initialize Modals
@@ -106,35 +118,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   });
 });
 
-/**
- * Renders the 5 preparation steps configured in config/content.js
- */
-function renderPreparationSteps() {
-  const container = document.getElementById('prep-steps-container');
-  if (!container || !window.US_BENGOL_CONFIG?.preparation) return;
-
-  const steps = window.US_BENGOL_CONFIG.preparation;
-  container.innerHTML = steps.map((item, idx) => `
-    <div class="prep-step-card" data-step="${item.step}">
-      <div class="prep-step-media">
-        <img 
-          src="${item.image}" 
-          alt="${item.alt || item.title}" 
-          class="prep-step-img"
-          loading="lazy"
-          onerror="this.onerror=null; this.src='${item.fallbackImage || 'images/prep/fallback-1.svg'}';"
-        >
-      </div>
-
-      <div class="prep-step-content">
-        <span class="step-num-pill">STAGE ${item.step}</span>
-        <h3 class="step-title">${item.title}</h3>
-        ${item.bengaliTitle ? `<div class="step-bengali-title bengali-accent">${item.bengaliTitle}</div>` : ''}
-        <p class="step-desc">${item.description}</p>
-      </div>
-    </div>
-  `).join('');
-}
 
 /**
  * Renders the 4 Why Us Pillars from config/content.js

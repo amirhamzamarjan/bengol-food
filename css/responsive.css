@@ -92,6 +92,34 @@
     margin-right: auto;
   }
 
+  /* Hero Trust Ribbon on Tablet (641px - 1024px) */
+  .hero-trust-wrapper {
+    margin-top: 26px;
+    padding: 0 16px;
+  }
+
+  .hero-trust-bar {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px 24px !important;
+    border-radius: 16px !important; /* CRITICAL: Never 9999px when on multiple rows! */
+    max-width: 580px !important;
+    width: 100% !important;
+    padding: 16px 24px !important;
+  }
+
+  .hero-trust-bar .trust-bar-sep {
+    display: none !important;
+  }
+
+  .hero-trust-bar .trust-bar-pill {
+    display: inline-flex !important;
+    justify-content: flex-start !important;
+    white-space: normal !important;
+    font-size: 0.8125rem !important;
+    gap: 10px !important;
+  }
+
   /* Products 2-col on Tablet */
   .products-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -233,47 +261,130 @@
     gap: 12px;
   }
 
-  /* Floating Elements in Hero */
-  .hero-floating-card {
-    position: relative;
-    bottom: auto;
-    left: auto;
-    margin-top: 16px;
-    max-width: 100%;
+  /* Hero Visual Composition on Mobile */
+  .hero-visual-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     width: 100%;
+    max-width: 360px;
+    margin: 18px auto 0 auto;
+    position: relative;
+    gap: 14px;
+  }
+
+  .hero-image-wrapper {
+    width: 100%;
+    max-width: 320px;
+    aspect-ratio: 1 / 1;
+    border-radius: var(--radius-lg);
+    position: relative;
+    margin: 0 auto;
   }
 
   .hero-secondary-chip {
+    position: absolute;
     top: 12px;
     right: 12px;
     font-size: 0.75rem;
     padding: 6px 12px;
+    z-index: 5;
+    margin: 0;
   }
 
-  /* Floating WhatsApp FAB */
+  .hero-floating-card {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin-top: 0;
+    max-width: 320px;
+    width: 100%;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Hero Trust Bar on Mobile - 2x2 Grid Badge instead of distorted circle */
+  .hero-trust-wrapper {
+    margin-top: 20px;
+    padding: 0 12px;
+  }
+
+  .hero-trust-bar {
+    border-radius: 16px !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+    width: 100% !important;
+    max-width: 360px !important;
+    margin: 0 auto !important;
+    padding: 14px 10px !important;
+    background: rgba(255, 255, 255, 0.94) !important;
+    border: 1px solid rgba(212, 195, 172, 0.5) !important;
+    box-shadow: 0 4px 16px rgba(44, 30, 22, 0.06) !important;
+  }
+
+  .hero-trust-bar .trust-bar-sep {
+    display: none !important;
+  }
+
+  .hero-trust-bar .trust-bar-pill {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 6px !important;
+    font-size: 0.75rem !important;
+    padding: 8px 4px !important;
+  }
+
+  .hero-trust-bar .trust-bar-icon {
+    width: 26px !important;
+    height: 26px !important;
+  }
+
+  /* Floating WhatsApp FAB - Lifted higher so it never collides with bottom pill dock */
   .floating-whatsapp-widget span {
     display: none;
   }
   .floating-whatsapp-widget {
-    padding: 14px;
+    padding: 12px;
     border-radius: 50%;
-    bottom: 20px;
-    right: 20px;
-    width: 52px;
-    height: 52px;
+    bottom: 84px !important;
+    right: 18px !important;
+    width: 48px !important;
+    height: 48px !important;
     justify-content: center;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45) !important;
   }
 
-  /* Final Contact Bar - Stack into clean 3 rows without orphan bullet dots */
+  /* Mobile footer extra clearance so Privacy Policy & Terms links are completely visible */
+  .site-footer {
+    padding-bottom: 200px !important;
+  }
+
+  /* Final Contact Bar - Clean rounded card instead of egg shape */
   .final-contact-bar {
-    flex-direction: column;
-    gap: 10px;
-    padding: 16px 20px;
-    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    border-radius: var(--radius-md) !important;
+    width: 100% !important;
+    max-width: 380px !important;
+    margin: 16px auto 0 auto !important;
+    padding: 16px 20px !important;
+    gap: 8px !important;
+    text-align: left !important;
+    background: var(--color-white) !important;
+    border: 1px solid rgba(44, 30, 22, 0.1) !important;
+    box-shadow: var(--shadow-sm) !important;
   }
 
   .final-contact-bar > span:nth-child(even) {
-    display: none;
+    display: none !important;
+  }
+
+  .final-contact-bar > span {
+    font-size: 0.8125rem !important;
+    line-height: 1.5 !important;
+    color: var(--color-brown-800) !important;
   }
 
   /* Delivery Map Header */
@@ -447,5 +558,169 @@
   .final-contact-bar {
     padding: 14px 10px;
     font-size: 0.8125rem;
+  }
+}
+
+/* =========================================================================
+   10. MOBILE & TABLET ADAPTATIONS FOR NEW COMPONENTS
+   ========================================================================= */
+@media (max-width: 768px) {
+  /* Pill Nav transforms into an elegant, compact floating bottom thumb dock */
+  .pill-nav {
+    position: fixed;
+    right: auto;
+    left: 50%;
+    transform: translateX(-50%);
+    top: auto;
+    bottom: 16px;
+    flex-direction: row;
+    z-index: 1000;
+    max-width: calc(100vw - 20px);
+  }
+
+  .pill-indicator {
+    display: none;
+  }
+
+  .pill-track {
+    flex-direction: row;
+    padding: 4px 6px;
+    gap: 2px;
+    background: rgba(29, 20, 14, 0.95);
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.45);
+    border: 1px solid rgba(230, 219, 203, 0.22);
+    border-radius: var(--radius-full);
+  }
+
+  .pill-item {
+    padding: 6px 7px;
+  }
+
+  .pill-item .pill-icon svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .pill-item .pill-label,
+  .pill-tooltip {
+    display: none !important;
+  }
+
+  /* Sticky background production story mobile adaptations */
+  .production-scroll-track {
+    height: 320vh !important;
+    overflow: visible !important;
+  }
+
+  .production-sticky-stage {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0 !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    z-index: 10 !important;
+  }
+
+  .production-stage-interface {
+    padding: 14px 14px 18px 14px;
+  }
+
+  .production-hud-header-row {
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+
+  .production-hud-badge {
+    font-size: 0.6rem;
+    padding: 4px 10px;
+  }
+
+  .btn-video-play-toggle {
+    font-size: 0.72rem;
+    padding: 4px 12px;
+  }
+
+  .production-stage-ticks {
+    gap: 3px;
+  }
+
+  .stage-tick-btn {
+    padding: 4px 2px;
+  }
+
+  .tick-label {
+    font-size: 0.625rem;
+  }
+
+  .production-captions-wrapper {
+    max-width: 100%;
+    margin: 12px 0;
+  }
+
+  .prod-caption {
+    padding: 14px 16px;
+    border-radius: var(--radius-md);
+  }
+
+  .prod-caption-title {
+    font-size: 1.15rem;
+  }
+
+  .prod-caption-desc {
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  .production-hud-bottom {
+    padding-top: 10px;
+    gap: 10px;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .production-scroll-hint {
+    font-size: 0.75rem;
+  }
+
+  .production-hud-brand {
+    font-size: 0.6875rem;
+  }
+
+  /* Certifications 1 column on mobile */
+  .cert-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cert-card {
+    padding: 22px 18px;
+  }
+
+  /* Gallery 1 column on mobile */
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Product detail 1 column */
+  .product-detail-layout {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+
+  .product-main-image-wrap {
+    max-height: 380px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .production-cinema-stage {
+    grid-template-columns: 1.2fr 1fr;
+    gap: 32px;
   }
 }

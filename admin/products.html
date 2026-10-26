@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Manage Products & Pricing | US BENGOL Admin</title>
-  <link rel="icon" type="image/png" href="../images/logo.png">
+  <link rel="icon" type="image/png" href="../images/logo2.png">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/admin.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,7 +15,7 @@
   <!-- Sidebar -->
   <aside class="admin-sidebar">
     <div class="admin-sidebar-brand">
-      <img src="../images/logo.png" alt="US BENGOL" class="admin-sidebar-logo">
+      <img src="../images/logo2.png" alt="US BENGOL" class="admin-sidebar-logo">
       <span class="admin-sidebar-title">ADMIN PANEL</span>
     </div>
 
@@ -27,6 +27,10 @@
       <a href="products.html" class="admin-nav-item active">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
         Products & Pricing
+      </a>
+      <a href="gallery.html" class="admin-nav-item">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Gallery
       </a>
       <a href="requests.html" class="admin-nav-item">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
@@ -134,15 +138,38 @@
           </div>
 
           <div class="form-group full-col">
-            <label class="form-label">Product Image</label>
+            <label class="form-label">Primary Product Image</label>
             <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
               <input type="text" id="prod-img-url" name="image_url" class="form-input" placeholder="images/ataruti.png or https://...">
               <label class="btn-sm btn-sm-outline" style="cursor: pointer; white-space: nowrap;">
-                Upload New Image
+                Upload Primary
                 <input type="file" id="prod-img-file" accept="image/*" style="display: none;">
               </label>
             </div>
             <div id="image-upload-status" style="font-size: 0.75rem; color: var(--admin-muted);"></div>
+          </div>
+
+          <div class="form-group full-col">
+            <label class="form-label">Product Gallery Images (3–4 Additional Photos)</label>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+              <input type="text" id="prod-gallery-imgs" class="form-input" placeholder="Comma-separated image URLs or paths">
+              <label class="btn-sm btn-sm-outline" style="cursor: pointer; white-space: nowrap;">
+                + Add Image
+                <input type="file" id="prod-gallery-file" accept="image/*" style="display: none;">
+              </label>
+            </div>
+            <small style="color: var(--admin-muted); font-size: 0.75rem;">Separate multiple URLs or paths with commas.</small>
+          </div>
+
+          <div class="form-group full-col">
+            <label class="form-label">Product Detail / High-Res Showcase Image</label>
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
+              <input type="text" id="prod-detail-img" class="form-input" placeholder="images/prep/prep-5-serving.png or https://...">
+              <label class="btn-sm btn-sm-outline" style="cursor: pointer; white-space: nowrap;">
+                Upload Detail
+                <input type="file" id="prod-detail-file" accept="image/*" style="display: none;">
+              </label>
+            </div>
           </div>
 
           <div class="form-group">
@@ -193,53 +220,46 @@
       }
 
       document.getElementById('product-form').addEventListener('submit', handleProductSave);
-      document.getElementById('prod-img-file').addEventListener('change', handleImageUpload);
+      document.getElementById('prod-img-file').addEventListener('change', (e) => handleSingleUpload(e, 'prod-img-url', 'image-upload-status'));
+      document.getElementById('prod-gallery-file').addEventListener('change', handleGalleryUpload);
+      document.getElementById('prod-detail-file').addEventListener('change', (e) => handleSingleUpload(e, 'prod-detail-img'));
     });
 
-    async function loadProductsTable() {
-      productsList = await window.USB_Supabase.getProducts();
-      const tbody = document.getElementById('products-table-body');
-      
-      tbody.innerHTML = productsList.map((p, idx) => {
-        const isAvail = p.is_available !== false;
-        const isVis = p.is_visible !== false;
-        return `
-          <tr>
-            <td><strong>#${p.sort_order || idx + 1}</strong></td>
-            <td>
-              <img src="../${p.image_url}" class="table-prod-thumb" alt="${p.name}" onerror="this.src='../images/ataruti.png';">
-            </td>
-            <td>
-              <strong>${p.name}</strong><br>
-              <small style="color: var(--admin-muted);">${p.bengali_name || p.bengaliName || ''}</small>
-            </td>
-            <td>
-              <span style="font-weight: 800; font-size: 1.1rem; color: var(--admin-text);">
-                ৳${(parseFloat(p.price) || 0).toFixed(2)}
-              </span>
-            </td>
-            <td>
-              <span class="badge badge-gold">${p.badge || 'None'}</span>
-            </td>
-            <td>
-              <span class="status-tag ${isAvail ? 'completed' : 'new'}">
-                ${isAvail ? 'In Stock' : 'Out of Stock'}
-              </span>
-            </td>
-            <td>
-              <span class="status-tag ${isVis ? 'completed' : 'new'}">
-                ${isVis ? 'Visible' : 'Hidden'}
-              </span>
-            </td>
-            <td>
-              <div style="display: flex; gap: 8px;">
-                <button type="button" class="btn-sm btn-sm-gold" onclick="openProductEditor('${p.id}')">Edit</button>
-                <button type="button" class="btn-sm btn-sm-danger" onclick="deleteProduct('${p.id}')">Delete</button>
-              </div>
-            </td>
-          </tr>
-        `;
-      }).join('');
+    async function handleSingleUpload(e, targetInputId, statusId) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const statusEl = statusId ? document.getElementById(statusId) : null;
+      if (statusEl) statusEl.textContent = 'Uploading image...';
+
+      try {
+        const res = await window.USB_Supabase.uploadImage(file, 'product-images');
+        if (res.success && res.url) {
+          document.getElementById(targetInputId).value = res.url;
+          if (statusEl) statusEl.textContent = '✓ Uploaded successfully!';
+        } else {
+          if (statusEl) statusEl.textContent = 'Upload error: ' + (res.error || 'Failed');
+        }
+      } catch (err) {
+        if (statusEl) statusEl.textContent = 'Upload error: ' + err.message;
+      }
+    }
+
+    async function handleGalleryUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      try {
+        const res = await window.USB_Supabase.uploadImage(file, 'product-images');
+        if (res.success && res.url) {
+          const input = document.getElementById('prod-gallery-imgs');
+          const current = input.value.split(',').map(s => s.trim()).filter(Boolean);
+          current.push(res.url);
+          input.value = current.join(', ');
+        }
+      } catch (err) {
+        alert('Upload error: ' + err.message);
+      }
     }
 
     function openProductEditor(productId) {
@@ -261,6 +281,14 @@
           document.getElementById('prod-sort').value = p.sort_order || 1;
           document.getElementById('prod-desc').value = p.description || '';
           document.getElementById('prod-img-url').value = p.image_url || '';
+          
+          let gImgs = p.gallery_images || [];
+          if (typeof gImgs === 'string') {
+            try { gImgs = JSON.parse(gImgs); } catch(e) { gImgs = gImgs.split(','); }
+          }
+          document.getElementById('prod-gallery-imgs').value = Array.isArray(gImgs) ? gImgs.join(', ') : '';
+          document.getElementById('prod-detail-img').value = p.detail_image || '';
+
           document.getElementById('prod-avail').value = p.is_available !== false ? 'true' : 'false';
           document.getElementById('prod-visible').value = p.is_visible !== false ? 'true' : 'false';
         }
@@ -268,31 +296,11 @@
         title.textContent = 'Add New Product';
         document.getElementById('prod-id').value = '';
         document.getElementById('prod-price').value = '0.00';
+        document.getElementById('prod-gallery-imgs').value = '';
+        document.getElementById('prod-detail-img').value = '';
       }
 
       modal.classList.add('active');
-    }
-
-    function closeProductEditor() {
-      document.getElementById('product-editor-modal').classList.remove('active');
-    }
-
-    async function handleImageUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const statusEl = document.getElementById('image-upload-status');
-      statusEl.textContent = 'Uploading image...';
-
-      try {
-        const res = await window.USB_Supabase.uploadImage(file);
-        if (res.success && res.url) {
-          document.getElementById('prod-img-url').value = res.url;
-          statusEl.textContent = '✓ Image ready to save!';
-        }
-      } catch (err) {
-        statusEl.textContent = 'Upload error: ' + err.message;
-      }
     }
 
     async function handleProductSave(e) {
@@ -300,6 +308,9 @@
       const saveBtn = document.getElementById('save-prod-btn');
       saveBtn.disabled = true;
       saveBtn.textContent = 'Saving...';
+
+      const galleryRaw = document.getElementById('prod-gallery-imgs').value;
+      const galleryImgs = galleryRaw.split(',').map(s => s.trim()).filter(Boolean);
 
       const prodData = {
         id: document.getElementById('prod-id').value || undefined,
@@ -311,6 +322,8 @@
         sort_order: parseInt(document.getElementById('prod-sort').value, 10) || 1,
         description: document.getElementById('prod-desc').value.trim(),
         image_url: document.getElementById('prod-img-url').value.trim() || 'images/ataruti.png',
+        gallery_images: galleryImgs,
+        detail_image: document.getElementById('prod-detail-img').value.trim(),
         is_available: document.getElementById('prod-avail').value === 'true',
         is_visible: document.getElementById('prod-visible').value === 'true'
       };
@@ -326,6 +339,10 @@
         saveBtn.disabled = false;
         saveBtn.textContent = 'Save Changes';
       }
+    }
+
+    function closeProductEditor() {
+      document.getElementById('product-editor-modal').classList.remove('active');
     }
 
     async function deleteProduct(productId) {

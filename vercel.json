@@ -2,6 +2,12 @@
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/product/:slug",
+      "destination": "/product.html?slug=:slug"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -30,6 +36,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/videos/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400"
         }
       ]
     }

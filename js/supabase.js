@@ -1,10 +1,12 @@
 /**
- * US BENGOL - Supabase Client & Local Data Store Bridge
+ * US BENGOL - Supabase Client & Local Data Store Bridge (v2)
  * 
  * Provides seamless integration with Supabase PostgreSQL and Storage,
  * with intelligent client-side fallback to localStorage so that the site
  * remains 100% operational offline, during development, and before
  * live Supabase credentials are provided.
+ * 
+ * v2: Added gallery CRUD, multi-image product support, certification content
  */
 
 (function (window) {
@@ -16,6 +18,7 @@
     LOCAL_PRODUCTS: 'usb_local_products',
     LOCAL_BULK_ORDERS: 'usb_local_bulk_orders',
     LOCAL_SITE_CONTENT: 'usb_local_site_content',
+    LOCAL_GALLERY: 'usb_local_gallery',
     ADMIN_AUTH: 'usb_admin_session'
   };
 
@@ -67,7 +70,6 @@
        PRODUCTS API
        --------------------------------------------------------- */
     async getProducts() {
-      // 1. Try Supabase if configured
       if (this.isConfigured && this.client) {
         try {
           const { data, error } = await this.client
@@ -86,7 +88,6 @@
         }
       }
 
-      // 2. Resilient local fallback from localStorage or config/content.js
       const cached = localStorage.getItem(STORAGE_KEYS.LOCAL_PRODUCTS);
       if (cached) {
         try {
@@ -97,13 +98,29 @@
       }
 
       const defaults = window.US_BENGOL_CONFIG?.defaultProducts || [];
-      // Persist defaults to local store
       localStorage.setItem(STORAGE_KEYS.LOCAL_PRODUCTS, JSON.stringify(defaults));
       return defaults;
     }
 
+    async getProductBySlug(slug) {
+      if (this.isConfigured && this.client) {
+        try {
+          const { data, error } = await this.client
+            .from('products')
+            .select('*')
+            .eq('slug', slug)
+            .single();
+
+          if (!error && data) return data;
+        } catch (e) {
+          console.warn('[US BENGOL] getProductBySlug error:', e);
+        }
+      }
+      const products = await this.getProducts();
+      return products.find(p => p.slug === slug) || null;
+    }
+
     async saveProduct(product) {
-      // If configured in Supabase:
       if (this.isConfigured && this.client) {
         try {
           const { data, error } = await this.client
@@ -112,7 +129,6 @@
             .select();
 
           if (!error) {
-            // Also update local mirror
             await this._updateLocalProductMirror(product);
             return { success: true, data };
           }
@@ -122,7 +138,6 @@
         }
       }
 
-      // Fallback: save to local mirror
       await this._updateLocalProductMirror(product);
       return { success: true, data: [product], mode: 'local' };
     }
@@ -164,6 +179,139 @@
     }
 
     /* ---------------------------------------------------------
+       GALLERY API
+       --------------------------------------------------------- */
+    async getGallery(includeUnpublished = false) {
+      if (this.isConfigured && this.client) {
+        try {
+          let query = this.client
+            .from('gallery')
+            .select('*')
+            .order('sort_order', { ascending: true });
+
+          if (!includeUnpublished) {
+            query = query.eq('is_published', true);
+          }
+
+          const { data, error } = await query;
+          if (!error && data) return data;
+          if (error) console.warn('[US BENGOL] Gallery fetch error:', error.message);
+        } catch (e) {
+          console.warn('[US BENGOL] Gallery network error:', e);
+        }
+      }
+
+      const cached = localStorage.getItem(STORAGE_KEYS.LOCAL_GALLERY);
+      if (cached) {
+        try {
+          const items = JSON.parse(cached);
+          if (items && items.length > 0) {
+            return includeUnpublished ? items : items.filter(g => g.is_published !== false);
+          }
+        } catch (e) { console.error(e); }
+      }
+
+      const defaults = window.US_BENGOL_CONFIG?.defaultGallery || [];
+      if (defaults.length > 0) {
+        localStorage.setItem(STORAGE_KEYS.LOCAL_GALLERY, JSON.stringify(defaults));
+      }
+      return includeUnpublished ? defaults : defaults.filter(g => g.is_published !== false);
+    }
+
+    async saveGalleryItem(item) {
+      if (this.isConfigured && this.client) {
+        try {
+          const { data, error } = await this.client
+            .from('gallery')
+            .upsert(item)
+            .select();
+          if (!error) {
+            this._updateLocalGalleryMirror(item);
+            return { success: true, data };
+          }
+          console.warn('[US BENGOL] Gallery save error:', error.message);
+        } catch (e) {
+          console.warn('[US BENGOL] Gallery save network error:', e);
+        }
+      }
+
+      this._updateLocalGalleryMirror(item);
+      return { success: true, data: [item], mode: 'local' };
+    }
+
+    _updateLocalGalleryMirror(item) {
+      try {
+        const gallery = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_GALLERY) || '[]');
+        const idx = gallery.findIndex(g => g.id === item.id);
+        if (idx >= 0) {
+          gallery[idx] = { ...gallery[idx], ...item, updated_at: new Date().toISOString() };
+        } else {
+          gallery.push({
+            ...item,
+            id: item.id || 'gal-' + Date.now(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+        }
+        localStorage.setItem(STORAGE_KEYS.LOCAL_GALLERY, JSON.stringify(gallery));
+      } catch (e) { console.error(e); }
+    }
+
+    async deleteGalleryItem(itemId) {
+      if (this.isConfigured && this.client) {
+        try {
+          const { error } = await this.client.from('gallery').delete().eq('id', itemId);
+          if (error) console.warn(error);
+        } catch (e) { console.warn(e); }
+      }
+      try {
+        const gallery = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_GALLERY) || '[]');
+        const filtered = gallery.filter(g => g.id !== itemId);
+        localStorage.setItem(STORAGE_KEYS.LOCAL_GALLERY, JSON.stringify(filtered));
+      } catch (e) { console.error(e); }
+      return { success: true };
+    }
+
+    /* ---------------------------------------------------------
+       SITE CONTENT API
+       --------------------------------------------------------- */
+    async getSiteContent(sectionKey) {
+      if (this.isConfigured && this.client) {
+        try {
+          const { data, error } = await this.client
+            .from('site_content')
+            .select('*')
+            .eq('section_key', sectionKey)
+            .single();
+          if (!error && data) return data.content;
+        } catch (e) {
+          console.warn('[US BENGOL] Site content fetch error:', e);
+        }
+      }
+      try {
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_SITE_CONTENT) || '{}');
+        return all[sectionKey] || null;
+      } catch (e) { return null; }
+    }
+
+    async saveSiteContent(sectionKey, content) {
+      if (this.isConfigured && this.client) {
+        try {
+          const { error } = await this.client
+            .from('site_content')
+            .upsert({ section_key: sectionKey, content, updated_at: new Date().toISOString() });
+          if (error) console.warn(error);
+        } catch (e) { console.warn(e); }
+      }
+      try {
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_SITE_CONTENT) || '{}');
+        all[sectionKey] = content;
+        localStorage.setItem(STORAGE_KEYS.LOCAL_SITE_CONTENT, JSON.stringify(all));
+      } catch (e) { console.error(e); }
+      return { success: true };
+    }
+
+    /* ---------------------------------------------------------
        BULK ORDERS API
        --------------------------------------------------------- */
     async submitBulkOrder(orderData) {
@@ -173,7 +321,6 @@
         created_at: new Date().toISOString()
       };
 
-      // 1. Try Supabase
       if (this.isConfigured && this.client) {
         try {
           const { data, error } = await this.client
@@ -182,7 +329,6 @@
             .select();
 
           if (!error) {
-            // Also save copy locally for convenience
             this._saveLocalBulkOrder(record);
             return { success: true, data };
           }
@@ -192,7 +338,6 @@
         }
       }
 
-      // 2. Save locally
       this._saveLocalBulkOrder(record);
       return { success: true, data: [record], mode: 'local' };
     }
@@ -252,20 +397,30 @@
     /* ---------------------------------------------------------
        IMAGE UPLOAD (SUPABASE STORAGE + BASE64 FALLBACK)
        --------------------------------------------------------- */
-    async uploadImage(file) {
+    async uploadImage(file, bucket = 'product-images') {
+      // Validate file
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+      if (!allowedTypes.includes(file.type)) {
+        return { success: false, error: 'Invalid file type. Use JPG, PNG, WebP, or GIF.' };
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        return { success: false, error: 'File too large. Maximum 5 MB.' };
+      }
+
       if (this.isConfigured && this.client) {
         try {
           const fileExt = file.name.split('.').pop();
           const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-          const filePath = `products/${fileName}`;
+          const folder = bucket === 'gallery-images' ? 'gallery' : 'products';
+          const filePath = `${folder}/${fileName}`;
 
           const { data, error } = await this.client.storage
-            .from('product-images')
+            .from(bucket)
             .upload(filePath, file);
 
           if (!error) {
             const { data: publicUrlData } = this.client.storage
-              .from('product-images')
+              .from(bucket)
               .getPublicUrl(filePath);
 
             return { success: true, url: publicUrlData.publicUrl };
@@ -313,7 +468,6 @@
       }
 
       // 2. Demo Mode / Passcode Access
-      // If user enters 'admin' or 'admin@usbengol.com' and password 'admin123' or 'usbengol'
       if (
         (email === 'admin' || email === 'admin@usbengol.com') &&
         (password === 'admin123' || password === 'usbengol' || password === '01921692008')

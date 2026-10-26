@@ -1,11 +1,10 @@
 /**
- * US BENGOL - Central Configuration & Content Dictionary
+ * US BENGOL - Central Configuration & Content Dictionary (v2)
  * 
  * All preparation photographs, brand copy, contact details,
  * and core product definitions are centralized here.
  * 
- * To replace preparation photos later with custom studio photography,
- * simply change the paths/URLs assigned to TEMP_PREP_IMAGE_01 through 05 below.
+ * v2: Updated logo to logo2.png, added production captions, certifications config
  */
 
 window.US_BENGOL_CONFIG = {
@@ -20,12 +19,88 @@ window.US_BENGOL_CONFIG = {
     dispatchAddress: "Bawgan, Uttarkhan, Dhaka 1230, Bangladesh",
     address: "Kitchen: Ullapara, Sirajganj | Dispatch: Uttarkhan, Dhaka",
     deliveryScope: "Nationwide across Bangladesh",
-    logoPath: "images/logo.png"
+    logoPath: "images/logo2.png"
   },
 
   // =========================================================================
-  // SECTION 20 & 54: HOW WE PREPARE - TEMPORARY PHOTOGRAPHY CONFIGURATION
-  // Replace these references with your permanent studio photos whenever ready.
+  // SUPABASE CONFIGURATION
+  // (Paste your Supabase credentials here, OR set them via Admin > Settings)
+  // =========================================================================
+  supabase: {
+    url: "",      // e.g. "https://your-project-id.supabase.co"
+    anonKey: ""   // e.g. "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." (Public Anon Key)
+  },
+
+  // =========================================================================
+  // CERTIFICATIONS (Placeholder until real cert details are provided)
+  // =========================================================================
+  certifications: {
+    bsti: {
+      title: "BSTI Approved",
+      description: "Bangladesh Standards and Testing Institution approval for food safety and quality standards compliance.",
+      certificateNumber: "",
+      status: "placeholder"
+    },
+    ifst: {
+      title: "IFST Recognized",
+      description: "Institute of Food Science and Technology recognition for hygienic food production practices.",
+      certificateNumber: "",
+      status: "placeholder"
+    }
+  },
+
+  // =========================================================================
+  // PRODUCTION JOURNEY - Video Captions (synced to scroll progress)
+  // These timestamps are relative percentages (0-100) of video duration
+  // =========================================================================
+  productionCaptions: [
+    {
+      startPercent: 0,
+      endPercent: 18,
+      title: "Premium Ingredients",
+      bengaliTitle: "উন্নত উপাদান",
+      description: "Carefully selected flour, the foundation of every authentic roti and parota."
+    },
+    {
+      startPercent: 18,
+      endPercent: 36,
+      title: "Into the Machine",
+      bengaliTitle: "যন্ত্রে প্রবেশ",
+      description: "Flour enters our production line, beginning the transformation into dough."
+    },
+    {
+      startPercent: 36,
+      endPercent: 54,
+      title: "Dough Preparation",
+      bengaliTitle: "ময়দা প্রস্তুতি",
+      description: "Careful mixing and kneading to achieve the perfect consistency and texture."
+    },
+    {
+      startPercent: 54,
+      endPercent: 72,
+      title: "Cooking & Shaping",
+      bengaliTitle: "রান্না ও আকৃতি",
+      description: "Traditional cooking techniques bring warmth and golden perfection to every piece."
+    },
+    {
+      startPercent: 72,
+      endPercent: 88,
+      title: "Quality Assurance",
+      bengaliTitle: "মান নিয়ন্ত্রণ",
+      description: "Every batch is checked for consistency, freshness, and quality standards."
+    },
+    {
+      startPercent: 88,
+      endPercent: 100,
+      title: "Sealed & Packaged",
+      bengaliTitle: "প্যাকেজিং",
+      description: "Hygienically sealed to preserve freshness from our kitchen to your table."
+    }
+  ],
+
+  // =========================================================================
+  // HOW WE PREPARE - PHOTOGRAPHY CONFIGURATION
+  // Replace with permanent studio photos when available
   // =========================================================================
   preparation: [
     {
@@ -33,7 +108,6 @@ window.US_BENGOL_CONFIG = {
       title: "Quality Comes First",
       bengaliTitle: "উপাদান নির্বাচন",
       description: "Materials and preparation are handled with attention to quality, starting with pristine, wholesome grains.",
-      // TEMP_PREP_IMAGE_01
       image: "images/prep/prep-1-quality.jpg",
       fallbackImage: "images/prep/fallback-1.svg",
       alt: "Finely milled whole wheat flour in an artisanal bowl with wheat grains"
@@ -43,7 +117,6 @@ window.US_BENGOL_CONFIG = {
       title: "Traditional Inspiration",
       bengaliTitle: "ঐতিহ্যের ছোঁয়া",
       description: "The preparation experience is rooted in familiar Bangladeshi food traditions and mindful dough preparation.",
-      // TEMP_PREP_IMAGE_02
       image: "images/prep/prep-2-dough.jpg",
       fallbackImage: "images/prep/fallback-2.svg",
       alt: "Hands kneading fresh, smooth roti dough on a wooden board"
@@ -53,7 +126,6 @@ window.US_BENGOL_CONFIG = {
       title: "Prepared With Care",
       bengaliTitle: "যত্নশীল প্রস্তুতি",
       description: "Each roti and parota is handled with care and attention to consistency, rolled to the perfect delicate thickness.",
-      // TEMP_PREP_IMAGE_03
       image: "images/prep/prep-3-rolling.jpg",
       fallbackImage: "images/prep/fallback-3.svg",
       alt: "Wooden rolling pin shaping round, authentic flatbread on wooden board"
@@ -63,7 +135,6 @@ window.US_BENGOL_CONFIG = {
       title: "Freshness in Focus",
       bengaliTitle: "তাজা ও গরম",
       description: "Freshness remains an essential part of the customer experience, baked gently to achieve natural tenderness.",
-      // TEMP_PREP_IMAGE_04
       image: "images/prep/prep-4-cooking.png",
       fallbackImage: "images/prep/fallback-4.svg",
       alt: "Freshly prepared roti gently toasted to golden warmth"
@@ -73,10 +144,79 @@ window.US_BENGOL_CONFIG = {
       title: "Ready for Your Table",
       bengaliTitle: "পরিবারের টেবিলে",
       description: "The finished product is packed with care, preserving softness and warmth for family meals and delivery.",
-      // TEMP_PREP_IMAGE_05
       image: "images/prep/prep-5-serving.png",
       fallbackImage: "images/prep/fallback-5.svg",
       alt: "Hot fresh stack of rotis nestled in a linen-lined woven basket"
+    }
+  ],
+
+  // =========================================================================
+  // GALLERY ITEMS (Initial set of 8 authentic items, showing 6 initially + Explore More)
+  // =========================================================================
+  defaultGallery: [
+    {
+      id: "gal-01",
+      title: "Finest Grain Selection",
+      description: "Pristine whole wheat and refined flours selected for natural aroma and taste.",
+      image_url: "images/prep/prep-1-quality.jpg",
+      sort_order: 1,
+      is_published: true
+    },
+    {
+      id: "gal-02",
+      title: "Gentle Kneading Process",
+      description: "Hydrated and kneaded to exact consistency to ensure softness in every bite.",
+      image_url: "images/prep/prep-2-dough.jpg",
+      sort_order: 2,
+      is_published: true
+    },
+    {
+      id: "gal-03",
+      title: "Artisanal Rolling Technique",
+      description: "Delicate and round flatbreads shaped with traditional hand-guided technique.",
+      image_url: "images/prep/prep-3-rolling.jpg",
+      sort_order: 3,
+      is_published: true
+    },
+    {
+      id: "gal-04",
+      title: "Traditional Baking Heat",
+      description: "Slow-toasted over controlled flame until naturally puffed and aromatic.",
+      image_url: "images/prep/prep-4-cooking.png",
+      sort_order: 4,
+      is_published: true
+    },
+    {
+      id: "gal-05",
+      title: "Fresh Warm Stacks",
+      description: "Hot rotis layered carefully to retain moisture and authentic comforting texture.",
+      image_url: "images/prep/prep-5-serving.png",
+      sort_order: 5,
+      is_published: true
+    },
+    {
+      id: "gal-06",
+      title: "Wholesome Atta Roti",
+      description: "Whole wheat goodness ready to anchor daily breakfast and dinner tables.",
+      image_url: "images/ataruti.png",
+      sort_order: 6,
+      is_published: true
+    },
+    {
+      id: "gal-07",
+      title: "Tender Maida Roti",
+      description: "Silky, tender white flour roti for effortless folding and pairing.",
+      image_url: "images/moydaruti.png",
+      sort_order: 7,
+      is_published: true
+    },
+    {
+      id: "gal-08",
+      title: "Flaky Golden Parota",
+      description: "Multi-layered with signature golden crispness outside and tender inside folds.",
+      image_url: "images/porota.png",
+      sort_order: 8,
+      is_published: true
     }
   ],
 
@@ -94,6 +234,13 @@ window.US_BENGOL_CONFIG = {
       shortDescription: "Soft, puffed, whole wheat everyday roti made with traditional care.",
       price: 0.00,
       image_url: "images/ataruti.png",
+      gallery_images: [
+        "images/ataruti.png",
+        "images/prep/prep-5-serving.png",
+        "images/prep/prep-4-cooking.png",
+        "images/prep/prep-1-quality.jpg"
+      ],
+      detail_image: "images/prep/prep-5-serving.png",
       badge: "Everyday Staple",
       is_available: true,
       is_visible: true,
@@ -109,6 +256,13 @@ window.US_BENGOL_CONFIG = {
       shortDescription: "Delicate, smooth, and tender flatbread with an airy, pliable crumb.",
       price: 0.00,
       image_url: "images/moydaruti.png",
+      gallery_images: [
+        "images/moydaruti.png",
+        "images/prep/prep-3-rolling.jpg",
+        "images/prep/prep-2-dough.jpg",
+        "images/prep/prep-4-cooking.png"
+      ],
+      detail_image: "images/prep/prep-3-rolling.jpg",
       badge: "Traditional Soft",
       is_available: true,
       is_visible: true,
@@ -124,12 +278,33 @@ window.US_BENGOL_CONFIG = {
       shortDescription: "Multi-layered, flaky, golden traditional parota with tender folds.",
       price: 0.00,
       image_url: "images/porota.png",
+      gallery_images: [
+        "images/porota.png",
+        "images/prep/prep-4-cooking.png",
+        "images/prep/prep-2-dough.jpg",
+        "images/prep/prep-5-serving.png"
+      ],
+      detail_image: "images/prep/prep-4-cooking.png",
       badge: "Morning Classic",
       is_available: true,
       is_visible: true,
       sort_order: 3,
       nutritionNotes: "Hand-folded and layered for authentic texture and golden crispness."
     }
+  ],
+
+  // =========================================================================
+  // NAVIGATION SECTIONS (for pill nav)
+  // =========================================================================
+  navSections: [
+    { id: 'hero', label: 'Home', icon: 'home' },
+    { id: 'certifications', label: 'BSTI Standards', icon: 'shield' },
+    { id: 'products', label: 'Products', icon: 'package' },
+    { id: 'production-story', label: 'How We Prepare', icon: 'film' },
+    { id: 'gallery', label: 'Gallery', icon: 'image' },
+    { id: 'story', label: 'Heritage', icon: 'book' },
+    { id: 'delivery', label: 'Delivery', icon: 'truck' },
+    { id: 'contact', label: 'Contact', icon: 'phone' }
   ],
 
   // Brand Pillars
@@ -155,7 +330,7 @@ window.US_BENGOL_CONFIG = {
     {
       number: "04",
       title: "Delivered Nationwide",
-      subtitle: "সারা দেশে পৌঁছে দেওয়া",
+      subtitle: "সারা দেশে পৌঁছে দেওয়া",
       description: "Crafted at our production kitchen in Ullapara, Sirajganj and dispatched via our central Dhaka hub, our supply reaches homes, restaurants, and institutions across Bangladesh."
     }
   ],

@@ -1,12 +1,12 @@
 /**
- * US BENGOL - Product Showcase Controller
+ * US BENGOL - Product Showcase Controller (v2)
  * 
  * Handles rendering the core products:
  * 01 - Atta Roti
  * 02 - Maida Roti
  * 03 - Parota
  * 
- * Dynamically binds prices from database with initial default ৳0.00.
+ * v2: Links to product detail pages, improved cards
  */
 
 (function (window) {
@@ -46,29 +46,35 @@
       const isAvail = prod.is_available !== false;
       const priceText = formatPrice(prod.price);
       const safeId = prod.id || `prod-${index}`;
+      const slug = prod.slug || safeId;
+      const productUrl = `product.html?slug=${encodeURIComponent(slug)}`;
 
       return `
         <article class="product-tile" data-product-id="${safeId}">
-          <div class="tile-media" onclick="window.USB_Modal.openProductModal('${safeId}')" role="button" tabindex="0" aria-label="View details for ${prod.name}">
-            <img 
-              src="${prod.image_url}" 
-              alt="${prod.name} - Fresh Bangladeshi Roti" 
-              class="tile-img" 
-              loading="lazy"
-              onerror="this.onerror=null; this.src='images/ataruti.png';"
-            >
-            ${prod.badge ? `<span class="tile-badge">${prod.badge}</span>` : ''}
-            <span class="tile-availability ${isAvail ? '' : 'unavailable'}">
-              <span class="status-pip"></span>
-              ${isAvail ? 'Available' : 'Unavailable'}
-            </span>
-          </div>
+          <a href="${productUrl}" class="tile-media-link" aria-label="View details for ${prod.name}">
+            <div class="tile-media">
+              <img 
+                src="${prod.image_url}" 
+                alt="${prod.name} - Fresh Bangladeshi Roti" 
+                class="tile-img" 
+                loading="lazy"
+                onerror="this.onerror=null; this.src='images/ataruti.png';"
+              >
+              ${prod.badge ? `<span class="tile-badge">${prod.badge}</span>` : ''}
+              <span class="tile-availability ${isAvail ? '' : 'unavailable'}">
+                <span class="status-pip"></span>
+                ${isAvail ? 'Available' : 'Unavailable'}
+              </span>
+            </div>
+          </a>
 
           <div class="tile-content">
             <div class="tile-title-group">
               <h3 class="tile-name">
-                <span>${prod.name}</span>
-                ${prod.bengali_name || prod.bengaliName ? `<span class="tile-bengali-name bengali-accent">${prod.bengali_name || prod.bengaliName}</span>` : ''}
+                <a href="${productUrl}" class="tile-name-link">
+                  <span>${prod.name}</span>
+                  ${prod.bengali_name || prod.bengaliName ? `<span class="tile-bengali-name bengali-accent">${prod.bengali_name || prod.bengaliName}</span>` : ''}
+                </a>
               </h3>
             </div>
 
@@ -80,18 +86,17 @@
                 <span class="tile-price" data-price="${prod.price}">${priceText}</span>
               </div>
 
-              <button 
-                type="button" 
+              <a 
+                href="${productUrl}" 
                 class="btn btn-primary tile-order-btn"
-                onclick="window.USB_Modal.openProductModal('${safeId}')"
-                aria-label="Order ${prod.name}"
+                aria-label="View ${prod.name} details"
               >
-                Order
+                View Details
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
-              </button>
+              </a>
             </div>
           </div>
         </article>

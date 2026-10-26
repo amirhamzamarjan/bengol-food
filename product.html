@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Details | US BENGOL</title>
+  
+  <meta name="description" content="View product details, images, and order information for US BENGOL traditional Bangladeshi roti and parota.">
+  <link rel="icon" type="image/png" href="images/logo2.png">
+  <link rel="apple-touch-icon" href="images/logo2.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Bengali:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="product-detail-page">
+  <!-- Minimal Header -->
+  <header class="product-detail-header">
+    <div class="container product-header-inner">
+      <a href="index.html" class="back-link" aria-label="Back to all products">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+        <span>All Products</span>
+      </a>
+      <a href="index.html" class="product-header-brand">
+        <img src="images/logo2.png" alt="US BENGOL" class="product-header-logo">
+      </a>
+    </div>
+  </header>
+
+  <main class="product-detail-main" id="product-detail-content">
+    <!-- Loading state -->
+    <div class="product-loading" id="product-loading">
+      <div class="loading-spinner"></div>
+      <p>Loading product details...</p>
+    </div>
+
+    <!-- Error state -->
+    <div class="product-error" id="product-error" style="display: none;">
+      <h2>Product Not Found</h2>
+      <p>We couldn't find the product you're looking for.</p>
+      <a href="index.html#products" class="btn btn-primary">Browse All Products</a>
+    </div>
+
+    <!-- Product Detail Content (populated by JS) -->
+    <div class="product-detail-layout" id="product-detail-layout" style="display: none;">
+      <div class="product-gallery-section">
+        <div class="product-main-image-wrap">
+          <img id="pd-main-image" src="" alt="" class="product-main-image">
+        </div>
+        <div class="product-thumbs" id="pd-thumbs">
+          <!-- Thumbnails rendered by JS -->
+        </div>
+      </div>
+
+      <div class="product-info-section">
+        <span class="badge badge-gold" id="pd-badge">Fresh Everyday</span>
+        <h1 class="product-detail-title" id="pd-title">Product Name</h1>
+        <div class="product-detail-bengali bengali-accent" id="pd-bengali"></div>
+        
+        <div class="product-detail-price" id="pd-price">৳0.00</div>
+        
+        <p class="product-detail-desc" id="pd-description"></p>
+
+        <div class="product-detail-meta" id="pd-meta">
+          <!-- Nutrition/meta notes -->
+        </div>
+
+        <div class="quantity-control-group">
+          <span class="quantity-label">Quantity (Packs):</span>
+          <div class="quantity-stepper">
+            <button type="button" class="stepper-btn" id="pd-qty-minus" aria-label="Decrease quantity">−</button>
+            <span class="stepper-value" id="pd-qty-val">1</span>
+            <button type="button" class="stepper-btn" id="pd-qty-plus" aria-label="Increase quantity">+</button>
+          </div>
+        </div>
+
+        <div class="product-detail-total" id="pd-total-row">
+          <span>Estimated Total:</span>
+          <strong id="pd-total-val">৳0.00</strong>
+        </div>
+
+        <button type="button" class="btn btn-whatsapp product-order-btn" id="pd-order-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.288.043.088.072.19.014.305-.058.115-.087.187-.173.289l-.26.309c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.144.39-.086s1.011.477 1.184.564.289.13.332.203c.043.072.043.419-.101.824z"/>
+          </svg>
+          Order on WhatsApp
+        </button>
+
+        <a href="index.html#products" class="btn btn-secondary product-back-btn">
+          ← Browse All Products
+        </a>
+      </div>
+    </div>
+
+    <!-- Detail Image Section -->
+    <div class="product-detail-image-section" id="pd-detail-image-section" style="display: none;">
+      <div class="container">
+        <img id="pd-detail-image" src="" alt="" class="product-detail-full-image">
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer (minimal) -->
+  <footer class="site-footer" style="margin-top: 0;">
+    <div class="container">
+      <div class="footer-bottom">
+        <div>© 2026 US BENGOL. All rights reserved.</div>
+        <div class="footer-legal-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <span>·</span>
+          <a href="terms.html">Terms & Conditions</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config/content.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/whatsapp.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      'use strict';
+
+      const loadingEl = document.getElementById('product-loading');
+      const errorEl = document.getElementById('product-error');
+      const layoutEl = document.getElementById('product-detail-layout');
+
+      // Get slug from URL params
+      const params = new URLSearchParams(window.location.search);
+      let slug = params.get('slug');
+
+      // Also support /product/slug-name via path
+      if (!slug) {
+        const pathParts = window.location.pathname.split('/').filter(Boolean);
+        if (pathParts.length >= 2 && pathParts[0] === 'product') {
+          slug = pathParts[1];
+        }
+      }
+
+      if (!slug) {
+        showError();
+        return;
+      }
+
+      try {
+        const product = await window.USB_Supabase.getProductBySlug(slug);
+        if (!product) {
+          showError();
+          return;
+        }
+
+        renderProduct(product);
+      } catch (e) {
+        console.error('Error loading product:', e);
+        showError();
+      }
+
+      function showError() {
+        loadingEl.style.display = 'none';
+        errorEl.style.display = 'flex';
+      }
+
+      function renderProduct(prod) {
+        loadingEl.style.display = 'none';
+        layoutEl.style.display = 'grid';
+
+        // Update page title
+        document.title = `${prod.name} | US BENGOL`;
+
+        // Main image
+        const mainImg = document.getElementById('pd-main-image');
+        mainImg.src = prod.image_url;
+        mainImg.alt = prod.name;
+
+        // Thumbnails
+        const thumbsEl = document.getElementById('pd-thumbs');
+        const allImages = [prod.image_url];
+        
+        // Add gallery images if available
+        let galleryImgs = prod.gallery_images || [];
+        if (typeof galleryImgs === 'string') {
+          try { galleryImgs = JSON.parse(galleryImgs); } catch(e) { galleryImgs = []; }
+        }
+        galleryImgs.forEach(img => { if (img) allImages.push(img); });
+
+        if (allImages.length > 1) {
+          thumbsEl.innerHTML = allImages.map((img, i) => `
+            <button class="product-thumb ${i === 0 ? 'active' : ''}" data-img="${img}" aria-label="View image ${i + 1}">
+              <img src="${img}" alt="${prod.name} view ${i + 1}" loading="lazy">
+            </button>
+          `).join('');
+
+          thumbsEl.querySelectorAll('.product-thumb').forEach(btn => {
+            btn.addEventListener('click', () => {
+              mainImg.src = btn.dataset.img;
+              thumbsEl.querySelectorAll('.product-thumb').forEach(t => t.classList.remove('active'));
+              btn.classList.add('active');
+            });
+          });
+        }
+
+        // Text content
+        document.getElementById('pd-badge').textContent = prod.badge || 'Fresh Everyday';
+        document.getElementById('pd-title').textContent = prod.name;
+        document.getElementById('pd-bengali').textContent = prod.bengali_name || prod.bengaliName || '';
+        document.getElementById('pd-description').textContent = prod.description || '';
+        
+        const price = parseFloat(prod.price) || 0;
+        document.getElementById('pd-price').textContent = `৳${price.toFixed(2)}`;
+
+        // Nutrition notes
+        const metaEl = document.getElementById('pd-meta');
+        if (prod.nutritionNotes) {
+          metaEl.innerHTML = `<div class="product-nutrition-note"><span class="nutrition-icon">✓</span>${prod.nutritionNotes}</div>`;
+        }
+
+        // Detail image
+        const detailImg = prod.detail_image;
+        if (detailImg) {
+          const detailSection = document.getElementById('pd-detail-image-section');
+          const detailImgEl = document.getElementById('pd-detail-image');
+          detailSection.style.display = 'block';
+          detailImgEl.src = detailImg;
+          detailImgEl.alt = `${prod.name} detailed view`;
+        }
+
+        // Quantity stepper
+        let qty = 1;
+        const qtyVal = document.getElementById('pd-qty-val');
+        const totalVal = document.getElementById('pd-total-val');
+
+        function updateTotal() {
+          qtyVal.textContent = qty;
+          totalVal.textContent = `৳${(price * qty).toFixed(2)}`;
+        }
+
+        document.getElementById('pd-qty-minus').addEventListener('click', () => {
+          if (qty > 1) { qty--; updateTotal(); }
+        });
+        document.getElementById('pd-qty-plus').addEventListener('click', () => {
+          qty++; updateTotal();
+        });
+        updateTotal();
+
+        // WhatsApp order button
+        document.getElementById('pd-order-btn').addEventListener('click', () => {
+          const orderUrl = window.USB_WhatsApp.createProductOrderUrl(prod.name, qty, price);
+          window.USB_WhatsApp.open(orderUrl);
+        });
+      }
+    });
+  </script>
+</body>
+</html>
