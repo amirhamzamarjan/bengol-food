@@ -221,6 +221,76 @@
       document.getElementById('prod-detail-file').addEventListener('change', (e) => handleSingleUpload(e, 'prod-detail-img'));
     });
 
+    async function loadProductsTable() {
+      const tbody = document.getElementById('products-table-body');
+      tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 30px;">Loading products from database...</td></tr>';
+
+      try {
+        productsList = await window.USB_Supabase.getProducts(true);
+      } catch (err) {
+        console.error('Failed to load products:', err);
+        productsList = [];
+      }
+
+      // Sort by sort_order
+      productsList.sort((a, b) => (parseInt(a.sort_order, 10) || 0) - (parseInt(b.sort_order, 10) || 0));
+
+      if (productsList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px; color: var(--admin-muted);">No products found. Click "+ Add New Product" above to create one.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = productsList.map((p, idx) => {
+        const isAvail = p.is_available !== false;
+        const isVis = p.is_visible !== false;
+        const priceNum = parseFloat(p.price) || 0;
+        const imgSrc = p.image_url ? (p.image_url.startsWith('http') || p.image_url.startsWith('/') ? p.image_url : `../${p.image_url}`) : '../images/ataruti.png';
+
+        return `
+          <tr>
+            <td style="font-weight: 600; color: var(--color-brown);">${p.sort_order || idx + 1}</td>
+            <td>
+              <img 
+                src="${imgSrc}" 
+                alt="${p.name}" 
+                style="width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid var(--admin-border); background: #FAF8F5;"
+                onerror="this.onerror=null; this.src='../images/ataruti.png';"
+              >
+            </td>
+            <td>
+              <div style="font-weight: 700; color: var(--admin-text); font-size: 0.95rem;">${p.name}</div>
+              <div style="font-size: 0.8rem; color: var(--admin-muted);">${p.bengali_name || p.bengaliName || ''}</div>
+              <small style="color: #9CA3AF; font-size: 0.72rem;">slug: ${p.slug}</small>
+            </td>
+            <td>
+              <strong style="font-size: 1.05rem; color: var(--admin-primary); font-family: var(--font-sans);">৳${priceNum.toFixed(2)}</strong>
+            </td>
+            <td>
+              <span class="badge badge-gold" style="font-size: 0.75rem;">${p.badge || 'Standard'}</span>
+            </td>
+            <td>
+              <span class="status-tag ${isAvail ? 'completed' : 'new'}" style="font-size: 0.75rem;">
+                ${isAvail ? '✓ Available' : '✕ Out of Stock'}
+              </span>
+            </td>
+            <td>
+              <span class="status-tag ${isVis ? 'completed' : 'review'}" style="font-size: 0.75rem;">
+                ${isVis ? '✓ Visible' : 'Hidden'}
+              </span>
+            </td>
+            <td style="text-align: right; white-space: nowrap;">
+              <button type="button" class="action-btn" onclick="openProductEditor('${p.id}')" title="Edit product and price">
+                ✏️ Edit Price / Details
+              </button>
+              <button type="button" class="action-btn text-danger" onclick="deleteProduct('${p.id}')" title="Delete product">
+                🗑️
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     async function handleSingleUpload(e, targetInputId, statusId) {
       const file = e.target.files[0];
       if (!file) return;
@@ -265,7 +335,7 @@
       form.reset();
 
       if (productId) {
-        const p = productsList.find(x => x.id === productId);
+        const p = productsList.find(x => x.id === productId || x.slug === productId);
         if (p) {
           title.textContent = `Edit Product: ${p.name}`;
           document.getElementById('prod-id').value = p.id;

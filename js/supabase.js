@@ -121,25 +121,47 @@
     }
 
     async saveProduct(product) {
+      const payload = { ...product };
+      if (!payload.id) delete payload.id;
+      payload.updated_at = new Date().toISOString();
+
       if (this.isConfigured && this.client) {
         try {
-          const { data, error } = await this.client
-            .from('products')
-            .upsert(product)
-            .select();
-
-          if (!error) {
-            await this._updateLocalProductMirror(product);
-            return { success: true, data };
+          let res;
+          if (payload.id) {
+            res = await this.client
+              .from('products')
+              .update(payload)
+              .eq('id', payload.id)
+              .select();
+          } else {
+            res = await this.client
+              .from('products')
+              .insert([payload])
+              .select();
           }
-          console.warn('[US BENGOL] Supabase saveProduct error:', error.message);
+
+          if (res.error) {
+            console.error('[US BENGOL] Supabase saveProduct error:', res.error);
+            throw new Error(res.error.message || 'Database error while saving product');
+          }
+
+          if (payload.id && res.data && res.data.length === 0) {
+            throw new Error('Supabase RLS policy prevented saving. Please update the RLS policies in Supabase SQL editor.');
+          }
+
+          if (res.data && res.data.length > 0) {
+            await this._updateLocalProductMirror(res.data[0]);
+            return { success: true, data: res.data };
+          }
         } catch (e) {
-          console.warn('[US BENGOL] Supabase save error:', e);
+          console.error('[US BENGOL] Supabase saveProduct failed:', e);
+          throw e;
         }
       }
 
-      await this._updateLocalProductMirror(product);
-      return { success: true, data: [product], mode: 'local' };
+      await this._updateLocalProductMirror(payload);
+      return { success: true, data: [payload], mode: 'local' };
     }
 
     async _updateLocalProductMirror(product) {
@@ -161,14 +183,13 @@
 
     async deleteProduct(productId) {
       if (this.isConfigured && this.client) {
-        try {
-          const { error } = await this.client
-            .from('products')
-            .delete()
-            .eq('id', productId);
-          if (error) console.warn(error);
-        } catch (e) {
-          console.warn(e);
+        const { error } = await this.client
+          .from('products')
+          .delete()
+          .eq('id', productId);
+        if (error) {
+          console.error('[US BENGOL] deleteProduct error:', error);
+          throw new Error(error.message);
         }
       }
 
@@ -219,24 +240,47 @@
     }
 
     async saveGalleryItem(item) {
+      const payload = { ...item };
+      if (!payload.id) delete payload.id;
+      payload.updated_at = new Date().toISOString();
+
       if (this.isConfigured && this.client) {
         try {
-          const { data, error } = await this.client
-            .from('gallery')
-            .upsert(item)
-            .select();
-          if (!error) {
-            this._updateLocalGalleryMirror(item);
-            return { success: true, data };
+          let res;
+          if (payload.id) {
+            res = await this.client
+              .from('gallery')
+              .update(payload)
+              .eq('id', payload.id)
+              .select();
+          } else {
+            res = await this.client
+              .from('gallery')
+              .insert([payload])
+              .select();
           }
-          console.warn('[US BENGOL] Gallery save error:', error.message);
+
+          if (res.error) {
+            console.error('[US BENGOL] Gallery save error:', res.error);
+            throw new Error(res.error.message || 'Database error while saving gallery photo');
+          }
+
+          if (payload.id && res.data && res.data.length === 0) {
+            throw new Error('Supabase RLS policy prevented saving gallery photo.');
+          }
+
+          if (res.data && res.data.length > 0) {
+            this._updateLocalGalleryMirror(res.data[0]);
+            return { success: true, data: res.data };
+          }
         } catch (e) {
-          console.warn('[US BENGOL] Gallery save network error:', e);
+          console.error('[US BENGOL] Gallery save network error:', e);
+          throw e;
         }
       }
 
-      this._updateLocalGalleryMirror(item);
-      return { success: true, data: [item], mode: 'local' };
+      this._updateLocalGalleryMirror(payload);
+      return { success: true, data: [payload], mode: 'local' };
     }
 
     _updateLocalGalleryMirror(item) {
@@ -259,10 +303,11 @@
 
     async deleteGalleryItem(itemId) {
       if (this.isConfigured && this.client) {
-        try {
-          const { error } = await this.client.from('gallery').delete().eq('id', itemId);
-          if (error) console.warn(error);
-        } catch (e) { console.warn(e); }
+        const { error } = await this.client.from('gallery').delete().eq('id', itemId);
+        if (error) {
+          console.error('[US BENGOL] deleteGalleryItem error:', error);
+          throw new Error(error.message);
+        }
       }
       try {
         const gallery = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_GALLERY) || '[]');
@@ -296,12 +341,13 @@
 
     async saveSiteContent(sectionKey, content) {
       if (this.isConfigured && this.client) {
-        try {
-          const { error } = await this.client
-            .from('site_content')
-            .upsert({ section_key: sectionKey, content, updated_at: new Date().toISOString() });
-          if (error) console.warn(error);
-        } catch (e) { console.warn(e); }
+        const { error } = await this.client
+          .from('site_content')
+          .upsert({ section_key: sectionKey, content, updated_at: new Date().toISOString() });
+        if (error) {
+          console.error('[US BENGOL] saveSiteContent error:', error);
+          throw new Error(error.message);
+        }
       }
       try {
         const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_SITE_CONTENT) || '{}');

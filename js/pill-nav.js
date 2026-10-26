@@ -39,13 +39,6 @@
     nav.setAttribute('aria-label', 'Section Navigation');
     nav.id = 'pill-nav';
 
-    // Active indicator (separate glowing circular badge)
-    indicatorEl = document.createElement('div');
-    indicatorEl.className = 'pill-indicator';
-    indicatorEl.innerHTML = ICON_MAP[sections[0].icon] || ICON_MAP.home;
-    indicatorEl.setAttribute('title', 'Click to expand navigation');
-    indicatorEl.setAttribute('aria-label', 'Current Section Indicator');
-
     // Main pill track
     pillEl = document.createElement('div');
     pillEl.className = 'pill-track';
@@ -69,45 +62,17 @@
         if (target) {
           target.scrollIntoView({ behavior: 'smooth', block: 'start' });
           setActive(section.id, section.icon);
-          closePill();
         }
       });
 
       pillEl.appendChild(btn);
     });
 
-    // Expand toggle button (on desktop pill)
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'pill-toggle-btn';
-    toggleBtn.setAttribute('aria-label', 'Expand or collapse navigation');
-    toggleBtn.innerHTML = `
-      <svg class="toggle-icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-      <svg class="toggle-icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-    `;
-    toggleBtn.addEventListener('click', togglePill);
-
-    nav.appendChild(indicatorEl);
     nav.appendChild(pillEl);
-    nav.appendChild(toggleBtn);
     document.body.appendChild(nav);
-
-    // Toggle on indicator click (desktop)
-    indicatorEl.addEventListener('click', togglePill);
 
     // IntersectionObserver for active tracking
     setupSectionObserver(sections);
-
-    // Close on outside click
-    document.addEventListener('click', (e) => {
-      if (isExpanded && !nav.contains(e.target)) {
-        closePill();
-      }
-    });
-
-    // Close on Escape
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && isExpanded) closePill();
-    });
   }
 
   function togglePill() {
@@ -124,11 +89,8 @@
     if (nav) nav.classList.remove('expanded');
   }
 
-  function setActive(sectionId, iconKey) {
+  function setActive(sectionId) {
     activeSection = sectionId;
-    if (indicatorEl && iconKey && ICON_MAP[iconKey]) {
-      indicatorEl.innerHTML = ICON_MAP[iconKey];
-    }
     if (pillEl) {
       pillEl.querySelectorAll('.pill-item').forEach(item => {
         item.classList.toggle('active', item.dataset.section === sectionId);
