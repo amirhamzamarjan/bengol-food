@@ -38,7 +38,7 @@
       </a>
       <a href="/admin/content.html" class="admin-nav-item">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Site Content
+        Site Content & Images
       </a>
     </nav>
 
@@ -202,13 +202,14 @@
         const initialBadge = (idx < 6 && isPublished) 
           ? `<span style="display: inline-block; font-size: 0.6875rem; background: #ECFDF5; color: #047857; padding: 2px 6px; border-radius: 4px; margin-left: 6px;">Initial 6</span>` 
           : '';
+        const imgSrc = item.image_url ? ((item.image_url.startsWith('http') || item.image_url.startsWith('data:') || item.image_url.startsWith('/')) ? item.image_url : `../${item.image_url}`) : '../images/ataruti.png';
 
         return `
           <tr>
             <td style="font-weight: 600; color: var(--color-brown);">${item.sort_order || idx + 1}</td>
             <td>
               <img 
-                src="${item.image_url}" 
+                src="${imgSrc}" 
                 alt="${item.title || ''}" 
                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; border: 1px solid var(--admin-border); background: #FAF8F5;"
                 onerror="this.onerror=null; this.src='../images/ataruti.png';"
@@ -243,7 +244,8 @@
       const previewImg = document.getElementById('gallery-preview-img');
       const placeholder = document.getElementById('gallery-preview-placeholder');
       if (url) {
-        previewImg.src = url;
+        const src = (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/')) ? url : `../${url}`;
+        previewImg.src = src;
         previewImg.style.display = 'block';
         placeholder.style.display = 'none';
       } else {
@@ -257,19 +259,23 @@
       if (!file) return;
 
       const statusEl = document.getElementById('gallery-upload-status');
-      statusEl.textContent = 'Uploading image...';
+      statusEl.textContent = 'Compressing & uploading...';
+      statusEl.style.color = '#D97706';
 
       try {
         const res = await window.USB_Supabase.uploadImage(file, 'gallery-images');
         if (res.success && res.url) {
           document.getElementById('gallery-img-url').value = res.url;
           updatePreview(res.url);
-          statusEl.textContent = '✓ Uploaded successfully!';
+          statusEl.textContent = `✓ Uploaded successfully! (${res.sizeKb ? res.sizeKb + ' KB' : 'Optimized'})`;
+          statusEl.style.color = '#16A34A';
         } else {
           statusEl.textContent = 'Upload failed: ' + (res.error || 'Check configuration');
+          statusEl.style.color = '#DC2626';
         }
       } catch (err) {
         statusEl.textContent = 'Upload error: ' + err.message;
+        statusEl.style.color = '#DC2626';
       }
     }
 

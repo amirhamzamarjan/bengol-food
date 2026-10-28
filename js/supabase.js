@@ -164,21 +164,29 @@
       return { success: true, data: [payload], mode: 'local' };
     }
 
-    async _updateLocalProductMirror(product) {
-      const products = await this.getProducts();
-      const index = products.findIndex(p => p.id === product.id || p.slug === product.slug);
-      if (index >= 0) {
-        products[index] = { ...products[index], ...product, updated_at: new Date().toISOString() };
-      } else {
-        products.push({
-          ...product,
-          id: product.id || 'prod-' + Date.now(),
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        });
+    _updateLocalProductMirror(product) {
+      try {
+        let products = [];
+        try {
+          products = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_PRODUCTS) || '[]');
+        } catch (e) { products = []; }
+        const index = products.findIndex(p => p.id === product.id || p.slug === product.slug);
+        if (index >= 0) {
+          products[index] = { ...products[index], ...product, updated_at: new Date().toISOString() };
+        } else {
+          products.push({
+            ...product,
+            id: product.id || 'prod-' + Date.now(),
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          });
+        }
+        localStorage.setItem(STORAGE_KEYS.LOCAL_PRODUCTS, JSON.stringify(products));
+        return products;
+      } catch (err) {
+        console.warn('[US BENGOL] Local storage product mirror warning (quota reached):', err);
+        return [product];
       }
-      localStorage.setItem(STORAGE_KEYS.LOCAL_PRODUCTS, JSON.stringify(products));
-      return products;
     }
 
     async deleteProduct(productId) {
@@ -193,9 +201,13 @@
         }
       }
 
-      const products = await this.getProducts();
-      const filtered = products.filter(p => p.id !== productId);
-      localStorage.setItem(STORAGE_KEYS.LOCAL_PRODUCTS, JSON.stringify(filtered));
+      try {
+        const products = await this.getProducts();
+        const filtered = products.filter(p => p.id !== productId);
+        localStorage.setItem(STORAGE_KEYS.LOCAL_PRODUCTS, JSON.stringify(filtered));
+      } catch (e) {
+        console.warn(e);
+      }
       return { success: true };
     }
 
@@ -343,7 +355,7 @@
       if (this.isConfigured && this.client) {
         const { error } = await this.client
           .from('site_content')
-          .upsert({ section_key: sectionKey, content, updated_at: new Date().toISOString() });
+          .upsert({ section_key: sectionKey, content, updated_at: new Date().toISOString() }, { onConflict: 'section_key' });
         if (error) {
           console.error('[US BENGOL] saveSiteContent error:', error);
           throw new Error(error.message);
@@ -354,6 +366,65 @@
         all[sectionKey] = content;
         localStorage.setItem(STORAGE_KEYS.LOCAL_SITE_CONTENT, JSON.stringify(all));
       } catch (e) { console.error(e); }
+      return { success: true };
+    }
+
+    async getAllSiteContent() {
+      const result = {};
+      if (this.isConfigured && this.client) {
+        try {
+          const { data, error } = await this.client
+            .from('site_content')
+            .select('*');
+          if (!error && data && data.length > 0) {
+            data.forEach(row => {
+              if (row.section_key) result[row.section_key] = row.content;
+            });
+            try {
+              localStorage.setItem(STORAGE_KEYS.LOCAL_SITE_CONTENT, JSON.stringify(result));
+            } catch(e) {}
+            return result;
+          }
+        } catch (e) {
+          console.warn('[US BENGOL] getAllSiteContent network notice:', e);
+        }
+      }
+      try {
+        return JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_SITE_CONTENT) || '{}');
+      } catch (e) {
+        return {};
+      }
+    }
+
+    async saveMultipleSiteContent(contentMap) {
+      const records = Object.entries(contentMap).map(([sectionKey, content]) => ({
+        section_key: sectionKey,
+        content: content,
+        updated_at: new Date().toISOString()
+      }));
+
+      if (this.isConfigured && this.client && records.length > 0) {
+        try {
+          const { error } = await this.client
+            .from('site_content')
+            .upsert(records, { onConflict: 'section_key' });
+          if (error) {
+            console.error('[US BENGOL] saveMultipleSiteContent cloud error:', error);
+            throw new Error(error.message);
+          }
+        } catch (e) {
+          console.error('[US BENGOL] saveMultipleSiteContent caught:', e);
+          throw e;
+        }
+      }
+
+      try {
+        const all = JSON.parse(localStorage.getItem(STORAGE_KEYS.LOCAL_SITE_CONTENT) || '{}');
+        Object.assign(all, contentMap);
+        localStorage.setItem(STORAGE_KEYS.LOCAL_SITE_CONTENT, JSON.stringify(all));
+      } catch (e) {
+        console.warn('Local storage cache write notice:', e);
+      }
       return { success: true };
     }
 
@@ -441,48 +512,126 @@
     }
 
     /* ---------------------------------------------------------
-       IMAGE UPLOAD (SUPABASE STORAGE + BASE64 FALLBACK)
+       IMAGE OPTIMIZER & UPLOAD (COMPRESS + SUPABASE STORAGE / BASE64)
        --------------------------------------------------------- */
+    async compressImage(file, maxWidth = 1400, maxHeight = 1400, quality = 0.82) {
+      if (!file || !file.type || !file.type.startsWith('image/')) return file;
+      if (file.type === 'image/svg+xml') return file;
+
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            // If already compact, keep as is
+            if (width <= maxWidth && height <= maxHeight && file.size < 180 * 1024) {
+              return resolve(file);
+            }
+
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const newName = file.name.replace(/\.[^.]+$/, '.jpg');
+                const compressedFile = new File([blob], newName, {
+                  type: 'image/jpeg',
+                  lastModified: Date.now()
+                });
+                resolve(compressedFile);
+              } else {
+                resolve(file);
+              }
+            }, 'image/jpeg', quality);
+          };
+          img.onerror = () => resolve(file);
+          img.src = e.target.result;
+        };
+        reader.onerror = () => resolve(file);
+        reader.readAsDataURL(file);
+      });
+    }
+
     async uploadImage(file, bucket = 'product-images') {
-      // Validate file
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        return { success: false, error: 'Invalid file type. Use JPG, PNG, WebP, or GIF.' };
-      }
-      if (file.size > 5 * 1024 * 1024) {
-        return { success: false, error: 'File too large. Maximum 5 MB.' };
+      if (!file) {
+        return { success: false, error: 'কোন ছবি নির্বাচন করা হয়নি (No image file provided)' };
       }
 
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
+      if (!allowedTypes.includes(file.type)) {
+        return { success: false, error: 'সঠিক ফরম্যাটের ছবি ব্যবহার করুন (Use JPG, PNG, WebP, or SVG)' };
+      }
+
+      // 1. Intelligent compression: handles even 15MB photos, turning them into ~50KB-120KB
+      let processedFile = file;
+      try {
+        processedFile = await this.compressImage(file);
+      } catch (err) {
+        console.warn('[US BENGOL] Image compression notice:', err);
+      }
+
+      // 2. Try Supabase Storage upload
       if (this.isConfigured && this.client) {
         try {
-          const fileExt = file.name.split('.').pop();
+          const fileExt = processedFile.name.split('.').pop() || 'jpg';
           const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${fileExt}`;
-          const folder = bucket === 'gallery-images' ? 'gallery' : 'products';
+          const folder = bucket.includes('gallery') ? 'gallery' : (bucket.includes('site') ? 'site' : 'products');
           const filePath = `${folder}/${fileName}`;
 
           const { data, error } = await this.client.storage
             .from(bucket)
-            .upload(filePath, file);
+            .upload(filePath, processedFile, {
+              cacheControl: '3600',
+              upsert: true
+            });
 
           if (!error) {
             const { data: publicUrlData } = this.client.storage
               .from(bucket)
               .getPublicUrl(filePath);
 
-            return { success: true, url: publicUrlData.publicUrl };
+            return {
+              success: true,
+              url: publicUrlData.publicUrl,
+              mode: 'supabase',
+              sizeKb: Math.round(processedFile.size / 1024)
+            };
           }
-          console.warn('[US BENGOL] Storage upload error:', error.message);
+          console.warn('[US BENGOL] Supabase Storage upload notice:', error.message);
         } catch (e) {
-          console.warn('[US BENGOL] Storage upload failed:', e);
+          console.warn('[US BENGOL] Storage upload caught:', e);
         }
       }
 
-      // Local fallback: read as Data URL
+      // 3. Resilient lightweight Base64 fallback (compressed ~50KB-100KB, never breaks DB/storage)
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve({ success: true, url: reader.result, mode: 'local' });
-        reader.onerror = () => reject(new Error('Failed to read image file'));
-        reader.readAsDataURL(file);
+        reader.onload = () => resolve({
+          success: true,
+          url: reader.result,
+          mode: 'local',
+          sizeKb: Math.round(processedFile.size / 1024)
+        });
+        reader.onerror = () => reject(new Error('Failed to process image'));
+        reader.readAsDataURL(processedFile);
       });
     }
 
@@ -560,7 +709,7 @@
 
       // 3. Refresh admin session
       const session = {
-        user: { email: 'admin@usbengol.com', role: 'admin' },
+        user: { email: 'admin@usbengol.bd', role: 'admin' },
         mode: 'cloud',
         loginAt: new Date().toISOString()
       };
@@ -573,11 +722,11 @@
       const cleanEmail = (email || '').trim().toLowerCase();
       const cleanPass = (password || '').trim();
 
-      const validEmail = (cleanEmail === 'admin' || cleanEmail === 'admin@usbengol.com');
+      const validEmail = (cleanEmail === 'admin' || cleanEmail === 'admin@usbengol.bd' || cleanEmail === 'admin@usbengol.com');
       if (!validEmail) {
         return {
           success: false,
-          error: 'ভুল ইউজারনেম। ইউজারনেম হিসেবে "admin@usbengol.com" বা "admin" ব্যবহার করুন।'
+          error: 'ভুল ইউজারনেম। ইউজারনেম হিসেবে "admin@usbengol.bd" বা "admin" ব্যবহার করুন।'
         };
       }
 
@@ -592,7 +741,7 @@
 
       if (isPassMatch) {
         const session = {
-          user: { email: 'admin@usbengol.com', role: 'admin' },
+          user: { email: 'admin@usbengol.bd', role: 'admin' },
           mode: 'cloud',
           loginAt: new Date().toISOString()
         };

@@ -49,3 +49,34 @@ CREATE POLICY "Allow full access to site content"
     FOR ALL
     USING (true)
     WITH CHECK (true);
+
+-- 6. STORAGE BUCKETS (Product images, Gallery photos, Site section images)
+INSERT INTO storage.buckets (id, name, public) 
+VALUES 
+  ('product-images', 'product-images', true),
+  ('gallery-images', 'gallery-images', true),
+  ('site-images', 'site-images', true)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+-- Storage Objects Policies for instant upload/download
+DROP POLICY IF EXISTS "Allow all on product images" ON storage.objects;
+DROP POLICY IF EXISTS "Allow all on gallery images" ON storage.objects;
+DROP POLICY IF EXISTS "Allow all on site images" ON storage.objects;
+DROP POLICY IF EXISTS "Public read product images" ON storage.objects;
+DROP POLICY IF EXISTS "Admin upload product images" ON storage.objects;
+
+CREATE POLICY "Allow all on product images" 
+    ON storage.objects FOR ALL 
+    USING (bucket_id = 'product-images') 
+    WITH CHECK (bucket_id = 'product-images');
+
+CREATE POLICY "Allow all on gallery images" 
+    ON storage.objects FOR ALL 
+    USING (bucket_id = 'gallery-images') 
+    WITH CHECK (bucket_id = 'gallery-images');
+
+CREATE POLICY "Allow all on site images" 
+    ON storage.objects FOR ALL 
+    USING (bucket_id = 'site-images') 
+    WITH CHECK (bucket_id = 'site-images');
+

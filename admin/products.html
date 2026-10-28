@@ -38,7 +38,7 @@
       </a>
       <a href="/admin/content.html" class="admin-nav-item">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Site Content
+        Site Content & Images
       </a>
     </nav>
 
@@ -135,37 +135,55 @@
           </div>
 
           <div class="form-group full-col">
-            <label class="form-label">Primary Product Image</label>
-            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
-              <input type="text" id="prod-img-url" name="image_url" class="form-input" placeholder="images/ataruti.png or https://...">
-              <label class="btn-sm btn-sm-outline" style="cursor: pointer; white-space: nowrap;">
-                Upload Primary
-                <input type="file" id="prod-img-file" accept="image/*" style="display: none;">
-              </label>
+            <label class="form-label">Primary Product Image (প্রধান ছবি)</label>
+            <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 8px;">
+              <div style="width: 72px; height: 72px; border-radius: 8px; border: 1px solid var(--admin-border); overflow: hidden; background: #FAF8F5; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                <img id="prod-img-preview" src="../images/ataruti.png" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='../images/ataruti.png';">
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="text" id="prod-img-url" name="image_url" class="form-input" placeholder="images/ataruti.png or https://..." oninput="updatePrimaryPreview(this.value)">
+                  <label class="btn btn-sm btn-gold" style="cursor: pointer; white-space: nowrap; margin: 0; display: inline-flex; align-items: center; gap: 4px;">
+                    📷 Upload
+                    <input type="file" id="prod-img-file" accept="image/*" style="display: none;">
+                  </label>
+                </div>
+                <div id="image-upload-status" style="font-size: 0.75rem; color: var(--admin-muted); margin-top: 4px;"></div>
+              </div>
             </div>
-            <div id="image-upload-status" style="font-size: 0.75rem; color: var(--admin-muted);"></div>
           </div>
 
           <div class="form-group full-col">
-            <label class="form-label">Product Gallery Images (3–4 Additional Photos)</label>
-            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
-              <input type="text" id="prod-gallery-imgs" class="form-input" placeholder="Comma-separated image URLs or paths">
-              <label class="btn-sm btn-sm-outline" style="cursor: pointer; white-space: nowrap;">
-                + Add Image
+            <label class="form-label">Product Gallery Images (অতিরিক্ত ৩-৪টি ছবি)</label>
+            <div id="gallery-thumbs-container" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; align-items: center;">
+              <!-- Thumbnails rendered dynamically with Remove buttons -->
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center;">
+              <input type="text" id="prod-gallery-imgs" class="form-input" placeholder="Image URLs (separated by comma)" style="flex: 1;" oninput="renderGalleryThumbsFromInput()">
+              <label class="btn btn-sm btn-secondary" style="cursor: pointer; white-space: nowrap; margin: 0; display: inline-flex; align-items: center; gap: 4px;">
+                + Add Photo
                 <input type="file" id="prod-gallery-file" accept="image/*" style="display: none;">
               </label>
             </div>
-            <small style="color: var(--admin-muted); font-size: 0.75rem;">Separate multiple URLs or paths with commas.</small>
+            <small style="color: var(--admin-muted); font-size: 0.75rem;">Select image file from computer/phone. Automatically compressed and uploaded.</small>
           </div>
 
           <div class="form-group full-col">
-            <label class="form-label">Product Detail / High-Res Showcase Image</label>
-            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 8px;">
-              <input type="text" id="prod-detail-img" class="form-input" placeholder="images/prep/prep-5-serving.png or https://...">
-              <label class="btn-sm btn-sm-outline" style="cursor: pointer; white-space: nowrap;">
-                Upload Detail
-                <input type="file" id="prod-detail-file" accept="image/*" style="display: none;">
-              </label>
+            <label class="form-label">Product Detail / High-Res Showcase Image (ডিটেইল শোপিস ছবি)</label>
+            <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 8px;">
+              <div style="width: 72px; height: 72px; border-radius: 8px; border: 1px solid var(--admin-border); overflow: hidden; background: #FAF8F5; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+                <img id="prod-detail-preview" src="../images/prep/prep-5-serving.png" alt="Detail preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='../images/prep/prep-5-serving.png';">
+              </div>
+              <div style="flex: 1;">
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <input type="text" id="prod-detail-img" class="form-input" placeholder="images/prep/prep-5-serving.png or https://..." oninput="updateDetailPreview(this.value)">
+                  <label class="btn btn-sm btn-secondary" style="cursor: pointer; white-space: nowrap; margin: 0; display: inline-flex; align-items: center; gap: 4px;">
+                    📷 Upload
+                    <input type="file" id="prod-detail-file" accept="image/*" style="display: none;">
+                  </label>
+                </div>
+                <div id="detail-upload-status" style="font-size: 0.75rem; color: var(--admin-muted); margin-top: 4px;"></div>
+              </div>
             </div>
           </div>
 
@@ -217,9 +235,9 @@
       }
 
       document.getElementById('product-form').addEventListener('submit', handleProductSave);
-      document.getElementById('prod-img-file').addEventListener('change', (e) => handleSingleUpload(e, 'prod-img-url', 'image-upload-status'));
+      document.getElementById('prod-img-file').addEventListener('change', (e) => handleSingleUpload(e, 'prod-img-url', 'image-upload-status', updatePrimaryPreview));
       document.getElementById('prod-gallery-file').addEventListener('change', handleGalleryUpload);
-      document.getElementById('prod-detail-file').addEventListener('change', (e) => handleSingleUpload(e, 'prod-detail-img'));
+      document.getElementById('prod-detail-file').addEventListener('change', (e) => handleSingleUpload(e, 'prod-detail-img', 'detail-upload-status', updateDetailPreview));
     });
 
     async function loadProductsTable() {
@@ -245,7 +263,7 @@
         const isAvail = p.is_available !== false;
         const isVis = p.is_visible !== false;
         const priceNum = parseFloat(p.price) || 0;
-        const imgSrc = p.image_url ? (p.image_url.startsWith('http') || p.image_url.startsWith('/') ? p.image_url : `../${p.image_url}`) : '../images/ataruti.png';
+        const imgSrc = p.image_url ? ((p.image_url.startsWith('http') || p.image_url.startsWith('data:') || p.image_url.startsWith('/')) ? p.image_url : `../${p.image_url}`) : '../images/ataruti.png';
 
         return `
           <tr>
@@ -292,23 +310,92 @@
       }).join('');
     }
 
-    async function handleSingleUpload(e, targetInputId, statusId) {
+    let activeGalleryImages = [];
+
+    function updatePrimaryPreview(url) {
+      const preview = document.getElementById('prod-img-preview');
+      if (!preview) return;
+      if (url && (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/') || url.startsWith('images/'))) {
+        preview.src = (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/')) ? url : `../${url}`;
+      } else {
+        preview.src = '../images/ataruti.png';
+      }
+    }
+
+    function updateDetailPreview(url) {
+      const preview = document.getElementById('prod-detail-preview');
+      if (!preview) return;
+      if (url && (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/') || url.startsWith('images/'))) {
+        preview.src = (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/')) ? url : `../${url}`;
+      } else {
+        preview.src = '../images/prep/prep-5-serving.png';
+      }
+    }
+
+    function renderGalleryThumbs() {
+      const container = document.getElementById('gallery-thumbs-container');
+      const input = document.getElementById('prod-gallery-imgs');
+      if (!container || !input) return;
+
+      input.value = activeGalleryImages.join(', ');
+
+      if (activeGalleryImages.length === 0) {
+        container.innerHTML = '<span style="font-size: 0.8125rem; color: var(--admin-muted); font-style: italic;">No additional photos yet.</span>';
+        return;
+      }
+
+      container.innerHTML = activeGalleryImages.map((img, idx) => {
+        const src = (img.startsWith('http') || img.startsWith('data:') || img.startsWith('/')) ? img : `../${img}`;
+        return `
+          <div style="position: relative; width: 64px; height: 64px; border-radius: 8px; border: 1px solid var(--admin-border); overflow: hidden; background: #FAF8F5;">
+            <img src="${src}" alt="Thumb" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='../images/ataruti.png';">
+            <button type="button" onclick="removeGalleryThumb(${idx})" title="Remove photo" style="position: absolute; top: 2px; right: 2px; background: rgba(220, 38, 38, 0.85); color: #FFF; border: none; border-radius: 50%; width: 18px; height: 18px; font-size: 11px; cursor: pointer; display: flex; align-items: center; justify-content: center; line-height: 1;">✕</button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function removeGalleryThumb(index) {
+      activeGalleryImages.splice(index, 1);
+      renderGalleryThumbs();
+    }
+
+    function renderGalleryThumbsFromInput() {
+      const val = document.getElementById('prod-gallery-imgs')?.value || '';
+      activeGalleryImages = val.split(',').map(s => s.trim()).filter(Boolean);
+      renderGalleryThumbs();
+    }
+
+    async function handleSingleUpload(e, targetInputId, statusId, previewCallback) {
       const file = e.target.files[0];
       if (!file) return;
 
       const statusEl = statusId ? document.getElementById(statusId) : null;
-      if (statusEl) statusEl.textContent = 'Uploading image...';
+      if (statusEl) {
+        statusEl.textContent = 'Processing & uploading...';
+        statusEl.style.color = '#D97706';
+      }
 
       try {
         const res = await window.USB_Supabase.uploadImage(file, 'product-images');
         if (res.success && res.url) {
           document.getElementById(targetInputId).value = res.url;
-          if (statusEl) statusEl.textContent = '✓ Uploaded successfully!';
+          if (previewCallback) previewCallback(res.url);
+          if (statusEl) {
+            statusEl.textContent = `✓ Uploaded successfully! (${res.sizeKb ? res.sizeKb + ' KB' : 'Optimized'})`;
+            statusEl.style.color = '#16A34A';
+          }
         } else {
-          if (statusEl) statusEl.textContent = 'Upload error: ' + (res.error || 'Failed');
+          if (statusEl) {
+            statusEl.textContent = 'Upload error: ' + (res.error || 'Failed');
+            statusEl.style.color = '#DC2626';
+          }
         }
       } catch (err) {
-        if (statusEl) statusEl.textContent = 'Upload error: ' + err.message;
+        if (statusEl) {
+          statusEl.textContent = 'Upload error: ' + err.message;
+          statusEl.style.color = '#DC2626';
+        }
       }
     }
 
@@ -319,10 +406,10 @@
       try {
         const res = await window.USB_Supabase.uploadImage(file, 'product-images');
         if (res.success && res.url) {
-          const input = document.getElementById('prod-gallery-imgs');
-          const current = input.value.split(',').map(s => s.trim()).filter(Boolean);
-          current.push(res.url);
-          input.value = current.join(', ');
+          activeGalleryImages.push(res.url);
+          renderGalleryThumbs();
+        } else {
+          alert('Upload failed: ' + (res.error || 'Unknown error'));
         }
       } catch (err) {
         alert('Upload error: ' + err.message);
@@ -334,6 +421,10 @@
       const title = document.getElementById('editor-modal-title');
       const form = document.getElementById('product-form');
       form.reset();
+      activeGalleryImages = [];
+
+      document.getElementById('image-upload-status').textContent = '';
+      document.getElementById('detail-upload-status').textContent = '';
 
       if (productId) {
         const p = productsList.find(x => x.id === productId || x.slug === productId);
@@ -348,13 +439,17 @@
           document.getElementById('prod-sort').value = p.sort_order || 1;
           document.getElementById('prod-desc').value = p.description || '';
           document.getElementById('prod-img-url').value = p.image_url || '';
-          
+          updatePrimaryPreview(p.image_url || '');
+
           let gImgs = p.gallery_images || [];
           if (typeof gImgs === 'string') {
             try { gImgs = JSON.parse(gImgs); } catch(e) { gImgs = gImgs.split(','); }
           }
-          document.getElementById('prod-gallery-imgs').value = Array.isArray(gImgs) ? gImgs.join(', ') : '';
+          activeGalleryImages = Array.isArray(gImgs) ? gImgs.map(s => String(s).trim()).filter(Boolean) : [];
+          renderGalleryThumbs();
+
           document.getElementById('prod-detail-img').value = p.detail_image || '';
+          updateDetailPreview(p.detail_image || '');
 
           document.getElementById('prod-avail').value = p.is_available !== false ? 'true' : 'false';
           document.getElementById('prod-visible').value = p.is_visible !== false ? 'true' : 'false';
@@ -363,8 +458,12 @@
         title.textContent = 'Add New Product';
         document.getElementById('prod-id').value = '';
         document.getElementById('prod-price').value = '0.00';
-        document.getElementById('prod-gallery-imgs').value = '';
+        document.getElementById('prod-img-url').value = 'images/ataruti.png';
+        updatePrimaryPreview('images/ataruti.png');
+        activeGalleryImages = [];
+        renderGalleryThumbs();
         document.getElementById('prod-detail-img').value = '';
+        updateDetailPreview('');
       }
 
       modal.classList.add('active');
@@ -374,10 +473,7 @@
       e.preventDefault();
       const saveBtn = document.getElementById('save-prod-btn');
       saveBtn.disabled = true;
-      saveBtn.textContent = 'Saving...';
-
-      const galleryRaw = document.getElementById('prod-gallery-imgs').value;
-      const galleryImgs = galleryRaw.split(',').map(s => s.trim()).filter(Boolean);
+      saveBtn.textContent = 'Saving to Database...';
 
       const prodData = {
         id: document.getElementById('prod-id').value || undefined,
@@ -389,8 +485,8 @@
         sort_order: parseInt(document.getElementById('prod-sort').value, 10) || 1,
         description: document.getElementById('prod-desc').value.trim(),
         image_url: document.getElementById('prod-img-url').value.trim() || 'images/ataruti.png',
-        gallery_images: galleryImgs,
-        detail_image: document.getElementById('prod-detail-img').value.trim(),
+        gallery_images: activeGalleryImages,
+        detail_image: document.getElementById('prod-detail-img').value.trim() || null,
         is_available: document.getElementById('prod-avail').value === 'true',
         is_visible: document.getElementById('prod-visible').value === 'true'
       };
@@ -399,8 +495,9 @@
         await window.USB_Supabase.saveProduct(prodData);
         closeProductEditor();
         await loadProductsTable();
-        alert('Product updated successfully! Changes are live immediately.');
+        alert('✓ প্রোডাক্ট এবং ছবি সফলভাবে সেভ হয়েছে! (Product and images saved successfully)');
       } catch (err) {
+        console.error('Failed to save product:', err);
         alert('Failed to save product: ' + err.message);
       } finally {
         saveBtn.disabled = false;

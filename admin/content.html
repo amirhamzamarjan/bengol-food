@@ -9,13 +9,13 @@
   <link rel="stylesheet" href="../css/admin.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Noto+Sans+Bengali:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="admin-body">
   <!-- Sidebar -->
   <aside class="admin-sidebar">
     <div class="admin-sidebar-brand">
-      <img src="../images/logo2.png" alt="US BENGOL" class="admin-sidebar-logo">
+      <img src="../images/logo2.png" alt="US BENGOL" class="admin-sidebar-logo" id="admin-logo-preview">
       <span class="admin-sidebar-title">ADMIN PANEL</span>
     </div>
 
@@ -38,7 +38,7 @@
       </a>
       <a href="/admin/content.html" class="admin-nav-item active">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-        Site Content
+        Site Content & Images
       </a>
     </nav>
 
@@ -48,11 +48,14 @@
     </div>
   </aside>
 
-  <!-- Main Content -->
+  <!-- Main Content Area -->
   <main class="admin-main">
-    <div class="admin-topbar">
-      <h1 class="admin-topbar-title">Site Content & Photography</h1>
-      <button type="button" class="btn btn-primary btn-sm" id="save-content-btn" onclick="saveAllContent()">
+    <div class="admin-topbar" style="position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+      <div>
+        <h1 class="admin-topbar-title">Website Content & Section Images</h1>
+        <p style="font-size: 0.8125rem; color: var(--admin-muted); margin: 0;">সব সেকশনের ছবি ও লেখা সরাসরি এডিট ও আপলোড করুন।</p>
+      </div>
+      <button type="button" class="btn btn-primary btn-sm" id="save-content-btn" onclick="saveAllSiteContent()">
         💾 Save All Changes to Cloud
       </button>
     </div>
@@ -60,51 +63,522 @@
     <div class="admin-content">
       <div id="content-status-banner" style="display: none; margin-bottom: 20px; padding: 14px 20px; border-radius: 8px; font-size: 0.875rem;"></div>
 
-      <div class="admin-card">
-        <h2 class="admin-card-title" style="margin-bottom: 20px;">1. Hero Section Content</h2>
-        <div class="form-grid">
-          <div class="form-group full-col">
-            <label class="form-label">Hero Headline</label>
-            <input type="text" id="cfg-hero-title" class="form-input" value="Traditional Taste. Made for Everyday Moments.">
+      <!-- Navigation Tabs -->
+      <div class="content-tabs" role="tablist">
+        <button type="button" class="content-tab-btn active" onclick="switchContentTab('tab-images', this)">
+          🖼️ Section Images
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-hero', this)">
+          🏠 Hero & Brand
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-story', this)">
+          📖 Heritage Story
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-diet', this)">
+          🥗 Mindful Nutrition
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-why', this)">
+          ✨ Why US BENGOL
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-trust', this)">
+          🤝 Commitment
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-quote', this)">
+          📜 Brand Quote
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-cert', this)">
+          🛡️ BSTI & IFST
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-prep', this)">
+          🎬 Production Stages
+        </button>
+        <button type="button" class="content-tab-btn" onclick="switchContentTab('tab-delivery', this)">
+          🚚 Delivery & Contact
+        </button>
+      </div>
+
+      <!-- ===================================================================
+           TAB 1: SECTION IMAGES STUDIO
+           =================================================================== -->
+      <div id="tab-images" class="content-tab-pane active">
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <div>
+              <h2 class="admin-card-title">Website Key Section Images (সেকশন ইমেজ স্টুডিও)</h2>
+              <p style="font-size: 0.85rem; color: var(--admin-muted); margin-top: 4px;">
+                মোবাইল বা কম্পিউটার থেকে সরাসরি যেকোনো ছবি আপলোড করুন। সাইট স্বয়ংক্রিয়ভাবে অপ্টিমাইজ করে লাইভ দেখাবে।
+              </p>
+            </div>
           </div>
-          <div class="form-group full-col">
-            <label class="form-label">Hero Description</label>
-            <textarea id="cfg-hero-desc" class="form-textarea" rows="3">US BENGOL brings familiar Bangladeshi roti and parota to modern homes with unhurried homemade care, authentic textures, and convenient nationwide delivery.</textarea>
+
+          <!-- Hero Main Image -->
+          <div class="asset-editor-card">
+            <div class="asset-preview-box">
+              <img id="preview-hero-img" src="../images/ataruti.png" alt="Hero Preview" class="asset-preview-img" onerror="this.src='../images/ataruti.png';">
+              <span class="asset-preview-badge">Hero Image</span>
+            </div>
+            <div>
+              <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--admin-text);">1. Hero Section Showcase Image (হোম পেজ ব্যানার ছবি)</h3>
+              <p style="font-size: 0.8125rem; color: var(--admin-muted); margin-bottom: 12px;">
+                ওয়েবসাইটের একেবারে উপরে বড় ব্যানারের ডানপাশে এই ছবিটি প্রদর্শিত হয়।
+              </p>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="img-hero" class="form-input" style="flex: 1; min-width: 240px;" value="images/ataruti.png" oninput="updateAssetPreview('preview-hero-img', this.value)">
+                <label class="btn btn-gold btn-sm" style="cursor: pointer; white-space: nowrap; margin: 0;">
+                  📷 Upload Hero Photo
+                  <input type="file" accept="image/*" style="display: none;" onchange="handleAssetUpload(event, 'img-hero', 'preview-hero-img', 'status-hero-img')">
+                </label>
+              </div>
+              <div id="status-hero-img" style="font-size: 0.75rem; color: var(--admin-muted); margin-top: 6px;"></div>
+            </div>
+          </div>
+
+          <!-- Heritage Story Image -->
+          <div class="asset-editor-card">
+            <div class="asset-preview-box">
+              <img id="preview-story-img" src="../images/moydaruti.png" alt="Story Preview" class="asset-preview-img" onerror="this.src='../images/moydaruti.png';">
+              <span class="asset-preview-badge">Story Image</span>
+            </div>
+            <div>
+              <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--admin-text);">2. Heritage Story Image (ঐতিহ্য ও ঘরের স্বাদ সেকশন ছবি)</h3>
+              <p style="font-size: 0.8125rem; color: var(--admin-muted); margin-bottom: 12px;">
+                "A Taste That Feels Like Home" গল্পের বামপাশে প্রদর্শিত ঐতিহ্যবাহী রুটি/পরোটার ছবি।
+              </p>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="img-story" class="form-input" style="flex: 1; min-width: 240px;" value="images/moydaruti.png" oninput="updateAssetPreview('preview-story-img', this.value)">
+                <label class="btn btn-gold btn-sm" style="cursor: pointer; white-space: nowrap; margin: 0;">
+                  📷 Upload Story Photo
+                  <input type="file" accept="image/*" style="display: none;" onchange="handleAssetUpload(event, 'img-story', 'preview-story-img', 'status-story-img')">
+                </label>
+              </div>
+              <div id="status-story-img" style="font-size: 0.75rem; color: var(--admin-muted); margin-top: 6px;"></div>
+            </div>
+          </div>
+
+          <!-- Mindful Diet Image -->
+          <div class="asset-editor-card">
+            <div class="asset-preview-box">
+              <img id="preview-diet-img" src="../images/ataruti.png" alt="Diet Preview" class="asset-preview-img" onerror="this.src='../images/ataruti.png';">
+              <span class="asset-preview-badge">Nutrition Image</span>
+            </div>
+            <div>
+              <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--admin-text);">3. Mindful Nutrition Image (পুষ্টিকর আটা রুটি সেকশন ছবি)</h3>
+              <p style="font-size: 0.8125rem; color: var(--admin-muted); margin-bottom: 12px;">
+                "A Familiar Choice for Everyday Meals" পুষ্টি ও স্বাস্থ্যকর রুটি সেকশনের ছবি।
+              </p>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="img-diet" class="form-input" style="flex: 1; min-width: 240px;" value="images/ataruti.png" oninput="updateAssetPreview('preview-diet-img', this.value)">
+                <label class="btn btn-gold btn-sm" style="cursor: pointer; white-space: nowrap; margin: 0;">
+                  📷 Upload Nutrition Photo
+                  <input type="file" accept="image/*" style="display: none;" onchange="handleAssetUpload(event, 'img-diet', 'preview-diet-img', 'status-diet-img')">
+                </label>
+              </div>
+              <div id="status-diet-img" style="font-size: 0.75rem; color: var(--admin-muted); margin-top: 6px;"></div>
+            </div>
+          </div>
+
+          <!-- Brand Logo -->
+          <div class="asset-editor-card">
+            <div class="asset-preview-box" style="background: #1D140E;">
+              <img id="preview-logo-img" src="../images/logo2.png" alt="Logo Preview" style="max-width: 80%; max-height: 80%; object-fit: contain;">
+              <span class="asset-preview-badge">Brand Logo</span>
+            </div>
+            <div>
+              <h3 style="font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--admin-text);">4. Brand Logo (ব্র্যান্ড লোগো)</h3>
+              <p style="font-size: 0.8125rem; color: var(--admin-muted); margin-bottom: 12px;">
+                ওয়েবসাইটের টপ হেডার ও ফুটারে প্রদর্শিত মূল লোগো।
+              </p>
+              <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="img-logo" class="form-input" style="flex: 1; min-width: 240px;" value="images/logo2.png" oninput="updateAssetPreview('preview-logo-img', this.value)">
+                <label class="btn btn-gold btn-sm" style="cursor: pointer; white-space: nowrap; margin: 0;">
+                  📷 Upload Logo
+                  <input type="file" accept="image/*" style="display: none;" onchange="handleAssetUpload(event, 'img-logo', 'preview-logo-img', 'status-logo-img')">
+                </label>
+              </div>
+              <div id="status-logo-img" style="font-size: 0.75rem; color: var(--admin-muted); margin-top: 6px;"></div>
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="admin-card">
-        <h2 class="admin-card-title" style="margin-bottom: 20px;">2. Contact & Fulfillment Information</h2>
-        <div class="form-grid">
-          <div class="form-group">
-            <label class="form-label">WhatsApp Number (Display)</label>
-            <input type="text" id="cfg-phone" class="form-input" value="+880 1000-000000">
+      <!-- ===================================================================
+           TAB 2: HERO & BRAND IDENTITY
+           =================================================================== -->
+      <div id="tab-hero" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Hero Section Headlines & Badges</h2>
+          <div class="form-grid">
+            <div class="form-group full-col">
+              <label class="form-label">Hero Main Title (হেডলাইন)</label>
+              <input type="text" id="cfg-hero-title" class="form-input" value="Traditional Taste. Made for Everyday Moments.">
+              <small style="color: var(--admin-muted); font-size: 0.75rem;">Default: Traditional Taste. Made for Everyday Moments.</small>
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Hero Lead Description (বর্ণনা)</label>
+              <textarea id="cfg-hero-desc" class="form-textarea" rows="3">US BENGOL brings familiar Bangladeshi roti and parota to modern homes with unhurried homemade care, authentic textures, and convenient nationwide delivery.</textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hero Top Micro Tag / Badge</label>
+              <input type="text" id="cfg-hero-micro-tag" class="form-input" value="ঘরের স্বাদ · Traditional Taste">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Floating Card Badge Label</label>
+              <input type="text" id="cfg-hero-card-title" class="form-input" value="100% Traditional Recipe">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Floating Card Subtitle</label>
+              <input type="text" id="cfg-hero-card-subtitle" class="form-input" value="Wholesome everyday flatbreads">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secondary Chip (তাজা খাবার ট্যাগ)</label>
+              <input type="text" id="cfg-hero-chip" class="form-input" value="Freshly Made to Order">
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Delivery Scope</label>
-            <input type="text" id="cfg-delivery" class="form-input" value="Nationwide across Bangladesh">
-          </div>
-          <div class="form-group full-col">
-            <label class="form-label">Kitchen & Factory Address (Production Facility)</label>
-            <input type="text" id="cfg-factory-address" class="form-input" value="Ullapara, Sirajganj, Bangladesh">
-          </div>
-          <div class="form-group full-col">
-            <label class="form-label">Dhaka Dispatch Hub Address (Fulfillment & Delivery)</label>
-            <input type="text" id="cfg-address" class="form-input" value="Bawgan, Uttarkhan, Dhaka 1230, Bangladesh">
+        </div>
+
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Brand Taglines & Slogans</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Primary Bengali Tagline (বাংলা স্লোগান)</label>
+              <input type="text" id="cfg-bengali-tagline" class="form-input" value="ঘরের স্বাদ">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Secondary Bengali Tagline</label>
+              <input type="text" id="cfg-secondary-bengali-tagline" class="form-input" value="প্রতিদিনের পরিচিত স্বাদ">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">English Tagline</label>
+              <input type="text" id="cfg-english-tagline" class="form-input" value="The familiar taste of home, presented beautifully.">
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="admin-card">
-        <h2 class="admin-card-title" style="margin-bottom: 12px;">3. Central Preparation Photography (5 Stages)</h2>
-        <p style="font-size: 0.875rem; color: var(--admin-muted); margin-bottom: 24px;">
-          প্রতিটি স্টেজের জন্য আপনার মোবাইল বা ক্যামেরা থেকে সরাসরি ছবি আপলোড করুন। আপলোডকৃত ছবি স্বয়ংক্রিয়ভাবে ক্লাউড সিডিএন-এ হোস্ট হবে এবং ওয়েবসাইটে লাইভ দেখাবে।
-        </p>
-        <div class="form-grid" id="prep-stages-editor">
-          <!-- Populated via JS -->
+      <!-- ===================================================================
+           TAB 3: HERITAGE STORY SECTION
+           =================================================================== -->
+      <div id="tab-story" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Heritage Story Content (ঐতিহ্যের স্বাদ)</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Story Kicker Tag</label>
+              <input type="text" id="cfg-story-kicker" class="form-input" value="HERITAGE & COMFORT">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Story Headline</label>
+              <input type="text" id="cfg-story-headline" class="form-input" value="A Taste That Feels Like Home">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Story Paragraph 1 (সকালের স্মৃতি)</label>
+              <textarea id="cfg-story-p1" class="form-textarea" rows="3">Think about early mornings in a Bangladeshi home. The gentle sound of a rolling pin touching the board, the faint aroma of wheat heating over the tawa, and the warm steam rising as a freshly baked roti puffs up.</textarea>
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Story Paragraph 2 (পরিবারের টেবিলে)</label>
+              <textarea id="cfg-story-p2" class="form-textarea" rows="3">Whether enjoyed with a simple bowl of spiced dal, fried eggs, or slow-cooked bhaji, roti and parota are more than mere meals—they are the quiet anchor of family breakfasts and late dinners.</textarea>
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Story Paragraph 3 (আমাদের অঙ্গীকার)</label>
+              <textarea id="cfg-story-p3" class="form-textarea" rows="3">US BENGOL was created to preserve that exact sense of comfort for today’s busy lifestyles, ensuring you never have to sacrifice the warmth of homemade tradition for convenience.</textarea>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- ===================================================================
+           TAB 4: MINDFUL NUTRITION & EVERYDAY DIET
+           =================================================================== -->
+      <div id="tab-diet" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Mindful Nutrition & Everyday Flatbread</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Badge Label</label>
+              <input type="text" id="cfg-diet-badge" class="form-input" value="MINDFUL NUTRITION">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Headline</label>
+              <input type="text" id="cfg-diet-headline" class="form-input" value="A Familiar Choice for Everyday Meals">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Main Description</label>
+              <textarea id="cfg-diet-desc" class="form-textarea" rows="3">Our regular Atta Roti is prepared from select whole wheat flour, offering an honest, unrefined everyday option for individuals and families who prefer mindful, balanced food choices.</textarea>
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Checklist Point 1</label>
+              <input type="text" id="cfg-diet-p1" class="form-input" value="Wholesome whole-grain flour rich in natural dietary fiber">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Checklist Point 2</label>
+              <input type="text" id="cfg-diet-p2" class="form-input" value="Free from unnecessary additives, artificial colors, or fillers">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Checklist Point 3</label>
+              <input type="text" id="cfg-diet-p3" class="form-input" value="Clean, balanced companion for wholesome daily breakfasts and light dinners">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           TAB 5: WHY US BENGOL (4 PILLARS)
+           =================================================================== -->
+      <div id="tab-why" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Why US BENGOL? Section Header</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Section Title</label>
+              <input type="text" id="cfg-why-title" class="form-input" value="Why US BENGOL?">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Subtitle</label>
+              <input type="text" id="cfg-why-subtitle" class="form-input" value="We focus on doing one essential thing exceptionally well: providing consistent, delicious, and traditional roti you can trust every single day.">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">4 Brand Pillars (৪টি প্রধান বৈশিষ্ট্য)</h2>
+          
+          <!-- Pillar 1 -->
+          <div style="background: #FAF8F5; padding: 18px; border-radius: 8px; border: 1px solid var(--admin-border); margin-bottom: 16px;">
+            <strong style="color: var(--admin-primary); display: block; margin-bottom: 10px;">PILLAR 01</strong>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">English Title</label>
+                <input type="text" id="cfg-pillar-1-title" class="form-input" value="Traditional at Heart">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bengali Subtitle</label>
+                <input type="text" id="cfg-pillar-1-sub" class="form-input" value="ঐতিহ্যের শিকড়">
+              </div>
+              <div class="form-group full-col">
+                <label class="form-label">Description</label>
+                <textarea id="cfg-pillar-1-desc" class="form-textarea" rows="2">Inspired by familiar Bangladeshi culinary traditions, capturing the authentic texture and warmth of home kitchens.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 2 -->
+          <div style="background: #FAF8F5; padding: 18px; border-radius: 8px; border: 1px solid var(--admin-border); margin-bottom: 16px;">
+            <strong style="color: var(--admin-primary); display: block; margin-bottom: 10px;">PILLAR 02</strong>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">English Title</label>
+                <input type="text" id="cfg-pillar-2-title" class="form-input" value="Made with Care">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bengali Subtitle</label>
+                <input type="text" id="cfg-pillar-2-sub" class="form-input" value="যত্নশীল কারিগর">
+              </div>
+              <div class="form-group full-col">
+                <label class="form-label">Description</label>
+                <textarea id="cfg-pillar-2-desc" class="form-textarea" rows="2">Prepared with rigorous attention to clean ingredients, consistent sizing, and unhurried craftsmanship.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 3 -->
+          <div style="background: #FAF8F5; padding: 18px; border-radius: 8px; border: 1px solid var(--admin-border); margin-bottom: 16px;">
+            <strong style="color: var(--admin-primary); display: block; margin-bottom: 10px;">PILLAR 03</strong>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">English Title</label>
+                <input type="text" id="cfg-pillar-3-title" class="form-input" value="Everyday Comfort">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bengali Subtitle</label>
+                <input type="text" id="cfg-pillar-3-sub" class="form-input" value="সহজ তৃপ্তি">
+              </div>
+              <div class="form-group full-col">
+                <label class="form-label">Description</label>
+                <textarea id="cfg-pillar-3-desc" class="form-textarea" rows="2">Honest, reliable food created for everyday breakfast tables, family dinners, and peaceful routine meals.</textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pillar 4 -->
+          <div style="background: #FAF8F5; padding: 18px; border-radius: 8px; border: 1px solid var(--admin-border);">
+            <strong style="color: var(--admin-primary); display: block; margin-bottom: 10px;">PILLAR 04</strong>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">English Title</label>
+                <input type="text" id="cfg-pillar-4-title" class="form-input" value="Delivered Nationwide">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Bengali Subtitle</label>
+                <input type="text" id="cfg-pillar-4-sub" class="form-input" value="সারা দেশে পৌঁছে দেওয়া">
+              </div>
+              <div class="form-group full-col">
+                <label class="form-label">Description</label>
+                <textarea id="cfg-pillar-4-desc" class="form-textarea" rows="2">Crafted at our production kitchen in Ullapara, Sirajganj and dispatched via our central Dhaka hub, our supply reaches homes, restaurants, and institutions across Bangladesh.</textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           TAB 6: COMMITMENT & TRUST
+           =================================================================== -->
+      <div id="tab-trust" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Our Commitment (অঙ্গীকার ও পরিচিতি)</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Kicker Tag</label>
+              <input type="text" id="cfg-trust-kicker" class="form-input" value="OUR COMMITMENT">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Headline</label>
+              <input type="text" id="cfg-trust-headline" class="form-input" value="Simple Food. Familiar Taste. Thoughtfully Made.">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Commitment Statement Copy</label>
+              <textarea id="cfg-trust-copy" class="form-textarea" rows="3">At US BENGOL, we believe the simplest foods carry the deepest meaning. Roti and parota have sustained Bangladeshi homes for generations. We honor that heritage not by reinventing what works, but by preparing it with uncompromised ingredient care, daily freshness, and reliable delivery to homes and institutions nationwide.</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           TAB 7: BRAND QUOTE
+           =================================================================== -->
+      <div id="tab-quote" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Editorial Brand Quote</h2>
+          <div class="form-grid">
+            <div class="form-group full-col">
+              <label class="form-label">Quote Statement</label>
+              <textarea id="cfg-quote-text" class="form-textarea" rows="2">Some foods don't need to be complicated. They just need to feel right.</textarea>
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Quote Subline / Attribution</label>
+              <input type="text" id="cfg-quote-sub" class="form-input" value="প্রতিদিনের পরিচিত স্বাদ · US BENGOL">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           TAB 8: BSTI & IFST STANDARDS
+           =================================================================== -->
+      <div id="tab-cert" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">BSTI & IFST Standards Assurance</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">Section Title</label>
+              <input type="text" id="cfg-cert-title" class="form-input" value="BSTI & IFST Quality Assurance">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Section Subtitle</label>
+              <input type="text" id="cfg-cert-subtitle" class="form-input" value="US BENGOL operates with strict compliance to national food standards, untouched mechanized handling, and pristine grain purity across every batch.">
+            </div>
+
+            <!-- BSTI -->
+            <div class="form-group full-col" style="background: #FAF8F5; padding: 18px; border-radius: 8px; border: 1px solid var(--admin-border); margin-top: 10px;">
+              <strong style="color: var(--admin-primary); display: block; margin-bottom: 8px;">BSTI COMPLIANCE CARD</strong>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Card Title</label>
+                  <input type="text" id="cfg-bsti-title" class="form-input" value="BSTI Food Standards Approval">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Status Label</label>
+                  <input type="text" id="cfg-bsti-status" class="form-input" value="Documented Quality System · Certified Food Grade">
+                </div>
+                <div class="form-group full-col">
+                  <label class="form-label">Description</label>
+                  <textarea id="cfg-bsti-desc" class="form-textarea" rows="2">Aligned with Bangladesh Standards and Testing Institution specifications for milled grain purity, moisture preservation, untouched hygienic rolling, and food-grade packaging.</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- IFST -->
+            <div class="form-group full-col" style="background: #FAF8F5; padding: 18px; border-radius: 8px; border: 1px solid var(--admin-border); margin-top: 10px;">
+              <strong style="color: #047857; display: block; margin-bottom: 8px;">IFST HYGIENE CARD</strong>
+              <div class="form-grid">
+                <div class="form-group">
+                  <label class="form-label">Card Title</label>
+                  <input type="text" id="cfg-ifst-title" class="form-input" value="IFST Scientific Hygiene Protocol">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Status Label</label>
+                  <input type="text" id="cfg-ifst-status" class="form-input" value="Zero Unhealthy Additives · Clean Formulation">
+                </div>
+                <div class="form-group full-col">
+                  <label class="form-label">Description</label>
+                  <textarea id="cfg-ifst-desc" class="form-textarea" rows="2">Guided by Institute of Food Science and Technology principles: untouched mechanized mixing, monitored thermal baking, and absolute zero artificial preservatives or harmful additives.</textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           TAB 9: PRODUCTION JOURNEY & PHOTO STAGES
+           =================================================================== -->
+      <div id="tab-prep" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 12px;">5 Central Preparation Photography Stages (প্রস্তুতির ৫টি ধাপ)</h2>
+          <p style="font-size: 0.875rem; color: var(--admin-muted); margin-bottom: 24px;">
+            প্রতিটি স্টেজের জন্য ক্যামেরা থেকে ছবি আপলোড করুন। সাইট স্বয়ংক্রিয়ভাবে অপ্টিমাইজ করবে।
+          </p>
+          <div class="form-grid" id="prep-stages-editor">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           TAB 10: DELIVERY, CONTACT & FINAL CTA
+           =================================================================== -->
+      <div id="tab-delivery" class="content-tab-pane">
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Contact & Order Fulfillment</h2>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">WhatsApp Display Number (দেখানোর জন্য)</label>
+              <input type="text" id="cfg-phone" class="form-input" value="+880 1000-000000">
+            </div>
+            <div class="form-group">
+              <label class="form-label">WhatsApp Link Number (শুধু নম্বর, যেমন: 8801700000000)</label>
+              <input type="text" id="cfg-whatsapp-digits" class="form-input" value="8801000000000">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Kitchen & Factory Address (উত্পাদন কেন্দ্র)</label>
+              <input type="text" id="cfg-factory-address" class="form-input" value="Ullapara, Sirajganj, Bangladesh">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Dhaka Fulfillment Hub Address (ঢাকা ডেলিভারি হাব)</label>
+              <input type="text" id="cfg-address" class="form-input" value="Bawgan, Uttarkhan, Dhaka 1230, Bangladesh">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Delivery Scope</label>
+              <input type="text" id="cfg-delivery" class="form-input" value="Nationwide across Bangladesh">
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h2 class="admin-card-title" style="margin-bottom: 20px;">Final Call to Action (নিচের অর্ডার বক্স)</h2>
+          <div class="form-grid">
+            <div class="form-group full-col">
+              <label class="form-label">Call to Action Title</label>
+              <input type="text" id="cfg-final-title" class="form-input" value="Bring Home a Taste That Feels Familiar.">
+            </div>
+            <div class="form-group full-col">
+              <label class="form-label">Call to Action Subline</label>
+              <textarea id="cfg-final-subline" class="form-textarea" rows="2">Traditional favorites, made with care and delivered across Bangladesh. Contact us today for individual packs or bulk requirements.</textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 
@@ -115,39 +589,179 @@
     let activePrepStages = [];
 
     document.addEventListener('DOMContentLoaded', async () => {
-      if (!window.USB_Supabase.getAdminSession()) {
+      if (!window.USB_Supabase || !window.USB_Supabase.getAdminSession()) {
         window.location.href = '/admin/index.html';
         return;
       }
 
-      await loadCloudSiteContent();
+      await loadAllSiteContent();
     });
 
-    async function loadCloudSiteContent() {
-      // 1. Load General Content
-      try {
-        const general = await window.USB_Supabase.getSiteContent('general_content');
-        if (general) {
-          if (general.hero_title) document.getElementById('cfg-hero-title').value = general.hero_title;
-          if (general.hero_desc) document.getElementById('cfg-hero-desc').value = general.hero_desc;
-          if (general.phone) document.getElementById('cfg-phone').value = general.phone;
-          if (general.delivery) document.getElementById('cfg-delivery').value = general.delivery;
-          if (general.factory_address) document.getElementById('cfg-factory-address').value = general.factory_address;
-          if (general.address) document.getElementById('cfg-address').value = general.address;
-        }
-      } catch (e) {
-        console.warn('Could not load general content:', e);
+    function switchContentTab(tabId, btn) {
+      document.querySelectorAll('.content-tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.content-tab-btn').forEach(b => b.classList.remove('active'));
+
+      const target = document.getElementById(tabId);
+      if (target) target.classList.add('active');
+      if (btn) btn.classList.add('active');
+    }
+
+    function updateAssetPreview(imgId, url) {
+      const el = document.getElementById(imgId);
+      if (!el) return;
+      if (url) {
+        el.src = (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/')) ? url : `../${url}`;
+      } else {
+        el.src = '../images/ataruti.png';
+      }
+    }
+
+    async function handleAssetUpload(e, inputId, previewId, statusId) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const statusEl = document.getElementById(statusId);
+      if (statusEl) {
+        statusEl.textContent = 'Compressing & uploading image...';
+        statusEl.style.color = '#D97706';
       }
 
-      // 2. Load Preparation Stages
       try {
-        const cloudPrep = await window.USB_Supabase.getSiteContent('preparation_stages');
+        const res = await window.USB_Supabase.uploadImage(file, 'site-images');
+        if (res.success && res.url) {
+          document.getElementById(inputId).value = res.url;
+          updateAssetPreview(previewId, res.url);
+          if (inputId === 'img-logo') {
+            const sidebarLogo = document.getElementById('admin-logo-preview');
+            if (sidebarLogo) sidebarLogo.src = (res.url.startsWith('http') || res.url.startsWith('data:') || res.url.startsWith('/')) ? res.url : `../${res.url}`;
+          }
+          if (statusEl) {
+            statusEl.textContent = `✓ Uploaded successfully! (${res.sizeKb ? res.sizeKb + ' KB' : 'Optimized'})`;
+            statusEl.style.color = '#16A34A';
+          }
+        } else {
+          if (statusEl) {
+            statusEl.textContent = 'Upload error: ' + (res.error || 'Failed');
+            statusEl.style.color = '#DC2626';
+          }
+        }
+      } catch (err) {
+        if (statusEl) {
+          statusEl.textContent = 'Upload error: ' + err.message;
+          statusEl.style.color = '#DC2626';
+        }
+      }
+    }
+
+    async function loadAllSiteContent() {
+      try {
+        const all = await window.USB_Supabase.getAllSiteContent();
+
+        // 1. Section Images
+        const secImgs = all['section_images'] || {};
+        if (secImgs.hero_image) {
+          document.getElementById('img-hero').value = secImgs.hero_image;
+          updateAssetPreview('preview-hero-img', secImgs.hero_image);
+        }
+        if (secImgs.story_image) {
+          document.getElementById('img-story').value = secImgs.story_image;
+          updateAssetPreview('preview-story-img', secImgs.story_image);
+        }
+        if (secImgs.diet_image) {
+          document.getElementById('img-diet').value = secImgs.diet_image;
+          updateAssetPreview('preview-diet-img', secImgs.diet_image);
+        }
+        if (secImgs.logo_image) {
+          document.getElementById('img-logo').value = secImgs.logo_image;
+          updateAssetPreview('preview-logo-img', secImgs.logo_image);
+        }
+
+        // 2. General Content & Hero
+        const gen = all['general_content'] || {};
+        if (gen.hero_title) document.getElementById('cfg-hero-title').value = gen.hero_title;
+        if (gen.hero_desc) document.getElementById('cfg-hero-desc').value = gen.hero_desc;
+        if (gen.hero_micro_tag) document.getElementById('cfg-hero-micro-tag').value = gen.hero_micro_tag;
+        if (gen.hero_card_title) document.getElementById('cfg-hero-card-title').value = gen.hero_card_title;
+        if (gen.hero_card_subtitle) document.getElementById('cfg-hero-card-subtitle').value = gen.hero_card_subtitle;
+        if (gen.hero_chip) document.getElementById('cfg-hero-chip').value = gen.hero_chip;
+
+        if (gen.bengali_tagline) document.getElementById('cfg-bengali-tagline').value = gen.bengali_tagline;
+        if (gen.secondary_bengali_tagline) document.getElementById('cfg-secondary-bengali-tagline').value = gen.secondary_bengali_tagline;
+        if (gen.english_tagline) document.getElementById('cfg-english-tagline').value = gen.english_tagline;
+
+        if (gen.phone) document.getElementById('cfg-phone').value = gen.phone;
+        if (gen.whatsapp_digits) document.getElementById('cfg-whatsapp-digits').value = gen.whatsapp_digits;
+        if (gen.factory_address) document.getElementById('cfg-factory-address').value = gen.factory_address;
+        if (gen.address) document.getElementById('cfg-address').value = gen.address;
+        if (gen.delivery) document.getElementById('cfg-delivery').value = gen.delivery;
+        if (gen.final_title) document.getElementById('cfg-final-title').value = gen.final_title;
+        if (gen.final_subline) document.getElementById('cfg-final-subline').value = gen.final_subline;
+
+        // 3. Heritage Story
+        const story = all['heritage_story'] || {};
+        if (story.kicker) document.getElementById('cfg-story-kicker').value = story.kicker;
+        if (story.headline) document.getElementById('cfg-story-headline').value = story.headline;
+        if (story.p1) document.getElementById('cfg-story-p1').value = story.p1;
+        if (story.p2) document.getElementById('cfg-story-p2').value = story.p2;
+        if (story.p3) document.getElementById('cfg-story-p3').value = story.p3;
+
+        // 4. Mindful Nutrition
+        const diet = all['mindful_diet'] || {};
+        if (diet.badge) document.getElementById('cfg-diet-badge').value = diet.badge;
+        if (diet.headline) document.getElementById('cfg-diet-headline').value = diet.headline;
+        if (diet.desc) document.getElementById('cfg-diet-desc').value = diet.desc;
+        if (diet.p1) document.getElementById('cfg-diet-p1').value = diet.p1;
+        if (diet.p2) document.getElementById('cfg-diet-p2').value = diet.p2;
+        if (diet.p3) document.getElementById('cfg-diet-p3').value = diet.p3;
+
+        // 5. Why US BENGOL
+        const why = all['why_us'] || {};
+        if (why.title) document.getElementById('cfg-why-title').value = why.title;
+        if (why.subtitle) document.getElementById('cfg-why-subtitle').value = why.subtitle;
+        if (why.pillars && Array.isArray(why.pillars)) {
+          why.pillars.forEach((p, idx) => {
+            const i = idx + 1;
+            if (document.getElementById(`cfg-pillar-${i}-title`)) document.getElementById(`cfg-pillar-${i}-title`).value = p.title || '';
+            if (document.getElementById(`cfg-pillar-${i}-sub`)) document.getElementById(`cfg-pillar-${i}-sub`).value = p.subtitle || '';
+            if (document.getElementById(`cfg-pillar-${i}-desc`)) document.getElementById(`cfg-pillar-${i}-desc`).value = p.description || '';
+          });
+        }
+
+        // 6. Commitment
+        const trust = all['trust_commitment'] || {};
+        if (trust.kicker) document.getElementById('cfg-trust-kicker').value = trust.kicker;
+        if (trust.headline) document.getElementById('cfg-trust-headline').value = trust.headline;
+        if (trust.copy) document.getElementById('cfg-trust-copy').value = trust.copy;
+
+        // 7. Brand Quote
+        const quote = all['brand_quote'] || {};
+        if (quote.text) document.getElementById('cfg-quote-text').value = quote.text;
+        if (quote.sub) document.getElementById('cfg-quote-sub').value = quote.sub;
+
+        // 8. Certifications
+        const cert = all['certifications'] || {};
+        if (cert.title) document.getElementById('cfg-cert-title').value = cert.title;
+        if (cert.subtitle) document.getElementById('cfg-cert-subtitle').value = cert.subtitle;
+        if (cert.bsti) {
+          if (cert.bsti.title) document.getElementById('cfg-bsti-title').value = cert.bsti.title;
+          if (cert.bsti.status) document.getElementById('cfg-bsti-status').value = cert.bsti.status;
+          if (cert.bsti.description) document.getElementById('cfg-bsti-desc').value = cert.bsti.description;
+        }
+        if (cert.ifst) {
+          if (cert.ifst.title) document.getElementById('cfg-ifst-title').value = cert.ifst.title;
+          if (cert.ifst.status) document.getElementById('cfg-ifst-status').value = cert.ifst.status;
+          if (cert.ifst.description) document.getElementById('cfg-ifst-desc').value = cert.ifst.description;
+        }
+
+        // 9. Preparation Stages
+        const cloudPrep = all['preparation_stages'];
         if (cloudPrep && Array.isArray(cloudPrep) && cloudPrep.length > 0) {
           activePrepStages = cloudPrep;
         } else {
           activePrepStages = window.US_BENGOL_CONFIG?.preparation || [];
         }
-      } catch (e) {
+      } catch (err) {
+        console.warn('Load site content notice:', err);
         activePrepStages = window.US_BENGOL_CONFIG?.preparation || [];
       }
 
@@ -157,7 +771,7 @@
     function renderPrepFields() {
       const container = document.getElementById('prep-stages-editor');
       container.innerHTML = activePrepStages.map((s, idx) => {
-        const imgSrc = s.image ? (s.image.startsWith('http') || s.image.startsWith('/') ? s.image : `../${s.image}`) : '../images/prep/prep-1-quality.jpg';
+        const imgSrc = s.image ? ((s.image.startsWith('http') || s.image.startsWith('data:') || s.image.startsWith('/')) ? s.image : `../${s.image}`) : '../images/prep/prep-1-quality.jpg';
 
         return `
           <div class="form-group full-col" style="background: #FAF8F5; padding: 20px; border-radius: 12px; border: 1.5px solid var(--admin-border); margin-bottom: 8px;">
@@ -180,13 +794,13 @@
               <div>
                 <label class="form-label" style="margin-bottom: 6px;">Stage Photography Image</label>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 6px;">
-                  <input type="text" id="prep-img-${idx}" class="form-input" style="flex: 1; min-width: 220px;" value="${s.image || ''}" placeholder="Image URL or path">
+                  <input type="text" id="prep-img-${idx}" class="form-input" style="flex: 1; min-width: 220px;" value="${s.image || ''}" placeholder="Image URL or path" oninput="updateAssetPreview('prep-preview-${idx}', this.value)">
                   <label class="btn btn-gold btn-sm" style="cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; margin: 0;">
                     📷 Upload Image
                     <input type="file" accept="image/*" style="display: none;" onchange="handlePrepUpload(${idx}, event)">
                   </label>
                 </div>
-                <small style="color: var(--admin-muted); font-size: 0.75rem;">JPG, PNG, WebP supported. Direct upload to Supabase cloud storage.</small>
+                <small style="color: var(--admin-muted); font-size: 0.75rem;">JPG, PNG, WebP supported. Direct upload to cloud storage.</small>
               </div>
             </div>
 
@@ -216,7 +830,7 @@
 
       const statusEl = document.getElementById(`prep-status-${idx}`);
       if (statusEl) {
-        statusEl.textContent = 'Uploading to cloud...';
+        statusEl.textContent = 'Compressing & uploading...';
         statusEl.style.color = '#D97706';
       }
 
@@ -224,9 +838,9 @@
         const res = await window.USB_Supabase.uploadImage(file, 'product-images');
         if (res.success && res.url) {
           document.getElementById(`prep-img-${idx}`).value = res.url;
-          document.getElementById(`prep-preview-${idx}`).src = res.url;
+          updateAssetPreview(`prep-preview-${idx}`, res.url);
           if (statusEl) {
-            statusEl.textContent = '✓ Uploaded successfully!';
+            statusEl.textContent = `✓ Uploaded! (${res.sizeKb ? res.sizeKb + ' KB' : 'Optimized'})`;
             statusEl.style.color = '#16A34A';
           }
         } else {
@@ -243,25 +857,123 @@
       }
     }
 
-    async function saveAllContent() {
+    async function saveAllSiteContent() {
       const btn = document.getElementById('save-content-btn');
       btn.disabled = true;
       btn.textContent = 'Saving to Supabase Cloud...';
 
       const banner = document.getElementById('content-status-banner');
 
-      // 1. Collect General Content
+      // 1. Section Images Map
+      const sectionImages = {
+        hero_image: document.getElementById('img-hero')?.value.trim() || 'images/ataruti.png',
+        story_image: document.getElementById('img-story')?.value.trim() || 'images/moydaruti.png',
+        diet_image: document.getElementById('img-diet')?.value.trim() || 'images/ataruti.png',
+        logo_image: document.getElementById('img-logo')?.value.trim() || 'images/logo2.png'
+      };
+
+      // 2. General Content & Hero
       const generalData = {
-        hero_title: document.getElementById('cfg-hero-title').value.trim(),
-        hero_desc: document.getElementById('cfg-hero-desc').value.trim(),
-        phone: document.getElementById('cfg-phone').value.trim(),
-        delivery: document.getElementById('cfg-delivery').value.trim(),
-        factory_address: document.getElementById('cfg-factory-address').value.trim(),
-        address: document.getElementById('cfg-address').value.trim(),
+        hero_title: document.getElementById('cfg-hero-title')?.value.trim(),
+        hero_desc: document.getElementById('cfg-hero-desc')?.value.trim(),
+        hero_micro_tag: document.getElementById('cfg-hero-micro-tag')?.value.trim(),
+        hero_card_title: document.getElementById('cfg-hero-card-title')?.value.trim(),
+        hero_card_subtitle: document.getElementById('cfg-hero-card-subtitle')?.value.trim(),
+        hero_chip: document.getElementById('cfg-hero-chip')?.value.trim(),
+        bengali_tagline: document.getElementById('cfg-bengali-tagline')?.value.trim(),
+        secondary_bengali_tagline: document.getElementById('cfg-secondary-bengali-tagline')?.value.trim(),
+        english_tagline: document.getElementById('cfg-english-tagline')?.value.trim(),
+        phone: document.getElementById('cfg-phone')?.value.trim(),
+        whatsapp_digits: document.getElementById('cfg-whatsapp-digits')?.value.trim() || '8801000000000',
+        delivery: document.getElementById('cfg-delivery')?.value.trim(),
+        factory_address: document.getElementById('cfg-factory-address')?.value.trim(),
+        address: document.getElementById('cfg-address')?.value.trim(),
+        final_title: document.getElementById('cfg-final-title')?.value.trim(),
+        final_subline: document.getElementById('cfg-final-subline')?.value.trim(),
         updated_at: new Date().toISOString()
       };
 
-      // 2. Collect Preparation Stages
+      // 3. Heritage Story
+      const storyData = {
+        kicker: document.getElementById('cfg-story-kicker')?.value.trim(),
+        headline: document.getElementById('cfg-story-headline')?.value.trim(),
+        p1: document.getElementById('cfg-story-p1')?.value.trim(),
+        p2: document.getElementById('cfg-story-p2')?.value.trim(),
+        p3: document.getElementById('cfg-story-p3')?.value.trim()
+      };
+
+      // 4. Mindful Nutrition
+      const dietData = {
+        badge: document.getElementById('cfg-diet-badge')?.value.trim(),
+        headline: document.getElementById('cfg-diet-headline')?.value.trim(),
+        desc: document.getElementById('cfg-diet-desc')?.value.trim(),
+        p1: document.getElementById('cfg-diet-p1')?.value.trim(),
+        p2: document.getElementById('cfg-diet-p2')?.value.trim(),
+        p3: document.getElementById('cfg-diet-p3')?.value.trim()
+      };
+
+      // 5. Why US BENGOL
+      const whyData = {
+        title: document.getElementById('cfg-why-title')?.value.trim(),
+        subtitle: document.getElementById('cfg-why-subtitle')?.value.trim(),
+        pillars: [
+          {
+            number: "01",
+            title: document.getElementById('cfg-pillar-1-title')?.value.trim(),
+            subtitle: document.getElementById('cfg-pillar-1-sub')?.value.trim(),
+            description: document.getElementById('cfg-pillar-1-desc')?.value.trim()
+          },
+          {
+            number: "02",
+            title: document.getElementById('cfg-pillar-2-title')?.value.trim(),
+            subtitle: document.getElementById('cfg-pillar-2-sub')?.value.trim(),
+            description: document.getElementById('cfg-pillar-2-desc')?.value.trim()
+          },
+          {
+            number: "03",
+            title: document.getElementById('cfg-pillar-3-title')?.value.trim(),
+            subtitle: document.getElementById('cfg-pillar-3-sub')?.value.trim(),
+            description: document.getElementById('cfg-pillar-3-desc')?.value.trim()
+          },
+          {
+            number: "04",
+            title: document.getElementById('cfg-pillar-4-title')?.value.trim(),
+            subtitle: document.getElementById('cfg-pillar-4-sub')?.value.trim(),
+            description: document.getElementById('cfg-pillar-4-desc')?.value.trim()
+          }
+        ]
+      };
+
+      // 6. Commitment
+      const trustData = {
+        kicker: document.getElementById('cfg-trust-kicker')?.value.trim(),
+        headline: document.getElementById('cfg-trust-headline')?.value.trim(),
+        copy: document.getElementById('cfg-trust-copy')?.value.trim()
+      };
+
+      // 7. Quote
+      const quoteData = {
+        text: document.getElementById('cfg-quote-text')?.value.trim(),
+        sub: document.getElementById('cfg-quote-sub')?.value.trim()
+      };
+
+      // 8. Certifications
+      const certData = {
+        title: document.getElementById('cfg-cert-title')?.value.trim(),
+        subtitle: document.getElementById('cfg-cert-subtitle')?.value.trim(),
+        bsti: {
+          title: document.getElementById('cfg-bsti-title')?.value.trim(),
+          status: document.getElementById('cfg-bsti-status')?.value.trim(),
+          description: document.getElementById('cfg-bsti-desc')?.value.trim()
+        },
+        ifst: {
+          title: document.getElementById('cfg-ifst-title')?.value.trim(),
+          status: document.getElementById('cfg-ifst-status')?.value.trim(),
+          description: document.getElementById('cfg-ifst-desc')?.value.trim()
+        }
+      };
+
+      // 9. Preparation Stages
       const prepData = activePrepStages.map((s, idx) => ({
         step: s.step || `0${idx+1}`,
         title: (document.getElementById(`prep-title-${idx}`)?.value || s.title).trim(),
@@ -271,18 +983,29 @@
         alt: s.alt || s.title
       }));
 
+      const batchPayload = {
+        section_images: sectionImages,
+        general_content: generalData,
+        heritage_story: storyData,
+        mindful_diet: dietData,
+        why_us: whyData,
+        trust_commitment: trustData,
+        brand_quote: quoteData,
+        certifications: certData,
+        preparation_stages: prepData
+      };
+
       try {
-        await window.USB_Supabase.saveSiteContent('general_content', generalData);
-        await window.USB_Supabase.saveSiteContent('preparation_stages', prepData);
+        await window.USB_Supabase.saveMultipleSiteContent(batchPayload);
 
         banner.style.display = 'block';
         banner.style.background = '#ECFDF5';
         banner.style.color = '#047857';
         banner.style.border = '1px solid #A7F3D0';
-        banner.textContent = '✓ সকল কনটেন্ট এবং আপলোডকৃত ছবি সফলভাবে ক্লাউড ডাটাবেজে সেভ হয়েছে!';
+        banner.textContent = '✓ সকল সেকশনের ছবি ও কনটেন্ট সফলভাবে ক্লাউড ডাটাবেজে সেভ হয়েছে! ওয়েবসাইটে তাৎক্ষণিকভাবে লাইভ দেখাবে।';
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        alert('All site content and images saved successfully! Live across all visitors.');
+        alert('All section images and content saved successfully! Live across storefront.');
       } catch (err) {
         banner.style.display = 'block';
         banner.style.background = '#FEE2E2';
