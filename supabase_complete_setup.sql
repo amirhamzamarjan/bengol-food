@@ -110,9 +110,6 @@ ON CONFLICT (id) DO UPDATE SET
   file_size_limit = 10485760,
   allowed_mime_types = ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/svg+xml'];
 
--- Enable RLS on storage.objects
-ALTER TABLE storage.objects ENABLE ROW LEVEL SECURITY;
-
 -- Storage Read Policies (Public CDN access)
 DROP POLICY IF EXISTS "Allow public read on product images" ON storage.objects;
 CREATE POLICY "Allow public read on product images" ON storage.objects FOR SELECT USING (bucket_id = 'product-images');
