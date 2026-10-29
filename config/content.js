@@ -108,121 +108,57 @@ window.US_BENGOL_CONFIG = {
       title: "Quality Comes First",
       bengaliTitle: "উপাদান নির্বাচন",
       description: "Materials and preparation are handled with attention to quality, starting with pristine, wholesome grains.",
-      image: "images/prep/prep-1-quality.jpg",
-      fallbackImage: "images/prep/fallback-1.svg",
-      alt: "Finely milled whole wheat flour in an artisanal bowl with wheat grains"
+      image: "",
+      fallbackImage: "",
+      alt: "Quality grain selection"
     },
     {
       step: "02",
       title: "Traditional Inspiration",
       bengaliTitle: "ঐতিহ্যের ছোঁয়া",
       description: "The preparation experience is rooted in familiar Bangladeshi food traditions and mindful dough preparation.",
-      image: "images/prep/prep-2-dough.jpg",
-      fallbackImage: "images/prep/fallback-2.svg",
-      alt: "Hands kneading fresh, smooth roti dough on a wooden board"
+      image: "",
+      fallbackImage: "",
+      alt: "Gentle dough kneading"
     },
     {
       step: "03",
       title: "Prepared With Care",
       bengaliTitle: "যত্নশীল প্রস্তুতি",
       description: "Each roti and parota is handled with care and attention to consistency, rolled to the perfect delicate thickness.",
-      image: "images/prep/prep-3-rolling.jpg",
-      fallbackImage: "images/prep/fallback-3.svg",
-      alt: "Wooden rolling pin shaping round, authentic flatbread on wooden board"
+      image: "",
+      fallbackImage: "",
+      alt: "Delicate rolling technique"
     },
     {
       step: "04",
       title: "Freshness in Focus",
       bengaliTitle: "তাজা ও গরম",
       description: "Freshness remains an essential part of the customer experience, baked gently to achieve natural tenderness.",
-      image: "images/prep/prep-4-cooking.png",
-      fallbackImage: "images/prep/fallback-4.svg",
-      alt: "Freshly prepared roti gently toasted to golden warmth"
+      image: "",
+      fallbackImage: "",
+      alt: "Traditional baking heat"
     },
     {
       step: "05",
       title: "Ready for Your Table",
       bengaliTitle: "পরিবারের টেবিলে",
       description: "The finished product is packed with care, preserving softness and warmth for family meals and delivery.",
-      image: "images/prep/prep-5-serving.png",
-      fallbackImage: "images/prep/fallback-5.svg",
-      alt: "Hot fresh stack of rotis nestled in a linen-lined woven basket"
+      image: "",
+      fallbackImage: "",
+      alt: "Fresh warm stacks ready for table"
     }
   ],
 
   // =========================================================================
-  // GALLERY ITEMS (Initial set of 8 authentic items, showing 6 initially + Explore More)
+  // GALLERY ITEMS
+  // Clean empty state — Upload all photos fresh from Admin > Gallery
   // =========================================================================
-  defaultGallery: [
-    {
-      id: "gal-01",
-      title: "Finest Grain Selection",
-      description: "Pristine whole wheat and refined flours selected for natural aroma and taste.",
-      image_url: "images/prep/prep-1-quality.jpg",
-      sort_order: 1,
-      is_published: true
-    },
-    {
-      id: "gal-02",
-      title: "Gentle Kneading Process",
-      description: "Hydrated and kneaded to exact consistency to ensure softness in every bite.",
-      image_url: "images/prep/prep-2-dough.jpg",
-      sort_order: 2,
-      is_published: true
-    },
-    {
-      id: "gal-03",
-      title: "Artisanal Rolling Technique",
-      description: "Delicate and round flatbreads shaped with traditional hand-guided technique.",
-      image_url: "images/prep/prep-3-rolling.jpg",
-      sort_order: 3,
-      is_published: true
-    },
-    {
-      id: "gal-04",
-      title: "Traditional Baking Heat",
-      description: "Slow-toasted over controlled flame until naturally puffed and aromatic.",
-      image_url: "images/prep/prep-4-cooking.png",
-      sort_order: 4,
-      is_published: true
-    },
-    {
-      id: "gal-05",
-      title: "Fresh Warm Stacks",
-      description: "Hot rotis layered carefully to retain moisture and authentic comforting texture.",
-      image_url: "images/prep/prep-5-serving.png",
-      sort_order: 5,
-      is_published: true
-    },
-    {
-      id: "gal-06",
-      title: "Wholesome Atta Roti",
-      description: "Whole wheat goodness ready to anchor daily breakfast and dinner tables.",
-      image_url: "images/ataruti.png",
-      sort_order: 6,
-      is_published: true
-    },
-    {
-      id: "gal-07",
-      title: "Tender Maida Roti",
-      description: "Silky, tender white flour roti for effortless folding and pairing.",
-      image_url: "images/moydaruti.png",
-      sort_order: 7,
-      is_published: true
-    },
-    {
-      id: "gal-08",
-      title: "Flaky Golden Parota",
-      description: "Multi-layered with signature golden crispness outside and tender inside folds.",
-      image_url: "images/porota.png",
-      sort_order: 8,
-      is_published: true
-    }
-  ],
+  defaultGallery: [],
 
   // =========================================================================
-  // CORE PRODUCTS (Atta Roti, Maida Roti, Parota ONLY)
-  // Default price: ৳0.00 until updated in Supabase database / Admin Panel
+  // CORE PRODUCTS (Atta Roti, Maida Roti, Parota)
+  // Upload images and set prices via Admin Panel > Products
   // =========================================================================
   defaultProducts: [
     {
@@ -233,14 +169,9 @@ window.US_BENGOL_CONFIG = {
       description: "Wholesome, soft, and puffed whole wheat roti made with traditional care. A daily staple that feels naturally comforting, wholesome, and familiar at every family breakfast and dinner table.",
       shortDescription: "Soft, puffed, whole wheat everyday roti made with traditional care.",
       price: 0.00,
-      image_url: "images/ataruti.png",
-      gallery_images: [
-        "images/ataruti.png",
-        "images/prep/prep-5-serving.png",
-        "images/prep/prep-4-cooking.png",
-        "images/prep/prep-1-quality.jpg"
-      ],
-      detail_image: "images/prep/prep-5-serving.png",
+      image_url: "",
+      gallery_images: [],
+      detail_image: "",
       badge: "Everyday Staple",
       is_available: true,
       is_visible: true,
@@ -255,14 +186,9 @@ window.US_BENGOL_CONFIG = {
       description: "Delicate, tender white-flour roti with a smooth, pliable texture. Thoughtfully rolled and cooked for effortless rolling, dipping, and pairing with savory curries and dal.",
       shortDescription: "Delicate, smooth, and tender flatbread with an airy, pliable crumb.",
       price: 0.00,
-      image_url: "images/moydaruti.png",
-      gallery_images: [
-        "images/moydaruti.png",
-        "images/prep/prep-3-rolling.jpg",
-        "images/prep/prep-2-dough.jpg",
-        "images/prep/prep-4-cooking.png"
-      ],
-      detail_image: "images/prep/prep-3-rolling.jpg",
+      image_url: "",
+      gallery_images: [],
+      detail_image: "",
       badge: "Traditional Soft",
       is_available: true,
       is_visible: true,
@@ -277,14 +203,9 @@ window.US_BENGOL_CONFIG = {
       description: "Traditional flaky layered parota with signature golden crispness outside and soft, tender multi-folds inside. Brings authentic morning nostalgia to your breakfast plate.",
       shortDescription: "Multi-layered, flaky, golden traditional parota with tender folds.",
       price: 0.00,
-      image_url: "images/porota.png",
-      gallery_images: [
-        "images/porota.png",
-        "images/prep/prep-4-cooking.png",
-        "images/prep/prep-2-dough.jpg",
-        "images/prep/prep-5-serving.png"
-      ],
-      detail_image: "images/prep/prep-4-cooking.png",
+      image_url: "",
+      gallery_images: [],
+      detail_image: "",
       badge: "Morning Classic",
       is_available: true,
       is_visible: true,

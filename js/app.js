@@ -69,10 +69,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderWhyUsPillars();
   renderBulkAudiences();
 
-  // 4. Initialize Data & Products
+  // 4. Initialize Data (Products & Gallery in parallel for lightning-fast page loading)
+  const initPromises = [];
   if (window.USB_Products) {
-    await window.USB_Products.init();
+    initPromises.push(window.USB_Products.init());
   }
+  if (window.USB_Gallery) {
+    initPromises.push(window.USB_Gallery.init());
+  }
+  await Promise.all(initPromises);
 
   // 4b. Initialize Pill Navigation
   if (window.USB_PillNav) {
@@ -82,11 +87,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 4c. Initialize Scroll-Driven Production Story
   if (window.USB_ProductionStory) {
     window.USB_ProductionStory.init();
-  }
-
-  // 4d. Initialize Gallery
-  if (window.USB_Gallery) {
-    await window.USB_Gallery.init();
   }
 
   // 5. Initialize Modals

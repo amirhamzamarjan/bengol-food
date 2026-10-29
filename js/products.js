@@ -52,14 +52,25 @@
       return `
         <article class="product-tile" data-product-id="${safeId}">
           <a href="${productUrl}" class="tile-media-link" aria-label="View details for ${prod.name}">
-            <div class="tile-media">
-              <img 
-                src="${prod.image_url}" 
-                alt="${prod.name} - Fresh Bangladeshi Roti" 
-                class="tile-img" 
-                loading="lazy"
-                onerror="this.onerror=null; this.src='images/ataruti.png';"
-              >
+            <div class="tile-media" style="background: radial-gradient(circle, #FBF8F3 0%, #EFE7DC 100%); display: flex; align-items: center; justify-content: center; position: relative;">
+              ${prod.image_url ? `
+                <img 
+                  src="${prod.image_url}" 
+                  alt="${prod.name} - Fresh Bangladeshi Roti" 
+                  class="tile-img" 
+                  loading="lazy"
+                  onerror="this.style.display='none'; if(this.nextElementSibling) this.nextElementSibling.style.display='flex';"
+                >
+                <div class="tile-placeholder-fallback" style="display: none; width: 100%; height: 100%; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: var(--color-gold);">
+                  <span style="font-size: 2.4rem;">🫓</span>
+                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-brown-900); letter-spacing: 0.05em;">${prod.name}</span>
+                </div>
+              ` : `
+                <div class="tile-placeholder-fallback" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; color: var(--color-gold);">
+                  <span style="font-size: 2.4rem;">🫓</span>
+                  <span style="font-size: 0.75rem; font-weight: 700; color: var(--color-brown-900); letter-spacing: 0.05em;">${prod.name}</span>
+                </div>
+              `}
               ${prod.badge ? `<span class="tile-badge">${prod.badge}</span>` : ''}
               <span class="tile-availability ${isAvail ? '' : 'unavailable'}">
                 <span class="status-pip"></span>

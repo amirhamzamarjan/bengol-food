@@ -138,11 +138,12 @@
             <label class="form-label">Primary Product Image (প্রধান ছবি)</label>
             <div style="display: flex; gap: 14px; align-items: center; margin-bottom: 8px;">
               <div style="width: 72px; height: 72px; border-radius: 8px; border: 1px solid var(--admin-border); overflow: hidden; background: #FAF8F5; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
-                <img id="prod-img-preview" src="../images/ataruti.png" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='../images/ataruti.png';">
+                <img id="prod-img-preview" src="" alt="Preview" style="width: 100%; height: 100%; object-fit: cover; display: none;" onerror="this.style.display='none';">
+                <span id="prod-img-empty-icon" style="font-size: 1.5rem; color: #D1D5DB;">📷</span>
               </div>
               <div style="flex: 1;">
                 <div style="display: flex; gap: 8px; align-items: center;">
-                  <input type="text" id="prod-img-url" name="image_url" class="form-input" placeholder="images/ataruti.png or https://..." oninput="updatePrimaryPreview(this.value)">
+                  <input type="text" id="prod-img-url" name="image_url" class="form-input" placeholder="Upload photo or paste URL" oninput="updatePrimaryPreview(this.value)">
                   <label class="btn btn-sm btn-gold" style="cursor: pointer; white-space: nowrap; margin: 0; display: inline-flex; align-items: center; gap: 4px;">
                     📷 Upload
                     <input type="file" id="prod-img-file" accept="image/*" style="display: none;">
@@ -269,12 +270,18 @@
           <tr>
             <td style="font-weight: 600; color: var(--color-brown);">${p.sort_order || idx + 1}</td>
             <td>
-              <img 
-                src="${imgSrc}" 
-                alt="${p.name}" 
-                style="width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid var(--admin-border); background: #FAF8F5;"
-                onerror="this.onerror=null; this.src='../images/ataruti.png';"
-              >
+              ${p.image_url ? `
+                <img 
+                  src="${imgSrc}" 
+                  alt="${p.name}" 
+                  style="width: 52px; height: 52px; object-fit: cover; border-radius: 8px; border: 1px solid var(--admin-border); background: #FAF8F5;"
+                  onerror="this.style.display='none';"
+                >
+              ` : `
+                <div style="width: 52px; height: 52px; border-radius: 8px; border: 1px dashed var(--admin-border); background: #FAF8F5; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; color: #9CA3AF;" title="No photo uploaded">
+                  🫓
+                </div>
+              `}
             </td>
             <td>
               <div style="font-weight: 700; color: var(--admin-text); font-size: 0.95rem;">${p.name}</div>
@@ -314,11 +321,16 @@
 
     function updatePrimaryPreview(url) {
       const preview = document.getElementById('prod-img-preview');
+      const icon = document.getElementById('prod-img-empty-icon');
       if (!preview) return;
       if (url && (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/') || url.startsWith('images/'))) {
         preview.src = (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/')) ? url : `../${url}`;
+        preview.style.display = 'block';
+        if (icon) icon.style.display = 'none';
       } else {
-        preview.src = '../images/ataruti.png';
+        preview.src = '';
+        preview.style.display = 'none';
+        if (icon) icon.style.display = 'block';
       }
     }
 
@@ -458,8 +470,8 @@
         title.textContent = 'Add New Product';
         document.getElementById('prod-id').value = '';
         document.getElementById('prod-price').value = '0.00';
-        document.getElementById('prod-img-url').value = 'images/ataruti.png';
-        updatePrimaryPreview('images/ataruti.png');
+        document.getElementById('prod-img-url').value = '';
+        updatePrimaryPreview('');
         activeGalleryImages = [];
         renderGalleryThumbs();
         document.getElementById('prod-detail-img').value = '';
@@ -484,7 +496,7 @@
         badge: document.getElementById('prod-badge').value.trim(),
         sort_order: parseInt(document.getElementById('prod-sort').value, 10) || 1,
         description: document.getElementById('prod-desc').value.trim(),
-        image_url: document.getElementById('prod-img-url').value.trim() || 'images/ataruti.png',
+        image_url: document.getElementById('prod-img-url').value.trim() || '',
         gallery_images: activeGalleryImages,
         detail_image: document.getElementById('prod-detail-img').value.trim() || null,
         is_available: document.getElementById('prod-avail').value === 'true',

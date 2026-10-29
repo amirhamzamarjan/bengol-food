@@ -114,7 +114,7 @@
           <!-- Hero Main Image -->
           <div class="asset-editor-card">
             <div class="asset-preview-box">
-              <img id="preview-hero-img" src="../images/ataruti.png" alt="Hero Preview" class="asset-preview-img" onerror="this.src='../images/ataruti.png';">
+              <img id="preview-hero-img" src="" alt="Hero Preview" class="asset-preview-img" onerror="this.style.opacity='0';" onload="this.style.opacity='1';">
               <span class="asset-preview-badge">Hero Image</span>
             </div>
             <div>
@@ -123,7 +123,7 @@
                 ওয়েবসাইটের একেবারে উপরে বড় ব্যানারের ডানপাশে এই ছবিটি প্রদর্শিত হয়।
               </p>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="img-hero" class="form-input" style="flex: 1; min-width: 240px;" value="images/ataruti.png" oninput="updateAssetPreview('preview-hero-img', this.value)">
+                <input type="text" id="img-hero" class="form-input" style="flex: 1; min-width: 240px;" placeholder="Upload image via button" oninput="updateAssetPreview('preview-hero-img', this.value)">
                 <label class="btn btn-gold btn-sm" style="cursor: pointer; white-space: nowrap; margin: 0;">
                   📷 Upload Hero Photo
                   <input type="file" accept="image/*" style="display: none;" onchange="handleAssetUpload(event, 'img-hero', 'preview-hero-img', 'status-hero-img')">
@@ -136,7 +136,7 @@
           <!-- Heritage Story Image -->
           <div class="asset-editor-card">
             <div class="asset-preview-box">
-              <img id="preview-story-img" src="../images/moydaruti.png" alt="Story Preview" class="asset-preview-img" onerror="this.src='../images/moydaruti.png';">
+              <img id="preview-story-img" src="" alt="Story Preview" class="asset-preview-img" onerror="this.style.opacity='0';" onload="this.style.opacity='1';">
               <span class="asset-preview-badge">Story Image</span>
             </div>
             <div>
@@ -145,7 +145,7 @@
                 "A Taste That Feels Like Home" গল্পের বামপাশে প্রদর্শিত ঐতিহ্যবাহী রুটি/পরোটার ছবি।
               </p>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="img-story" class="form-input" style="flex: 1; min-width: 240px;" value="images/moydaruti.png" oninput="updateAssetPreview('preview-story-img', this.value)">
+                <input type="text" id="img-story" class="form-input" style="flex: 1; min-width: 240px;" placeholder="Upload image via button" oninput="updateAssetPreview('preview-story-img', this.value)">
                 <label class="btn btn-gold btn-sm" style="cursor: pointer; white-space: nowrap; margin: 0;">
                   📷 Upload Story Photo
                   <input type="file" accept="image/*" style="display: none;" onchange="handleAssetUpload(event, 'img-story', 'preview-story-img', 'status-story-img')">
@@ -158,7 +158,7 @@
           <!-- Mindful Diet Image -->
           <div class="asset-editor-card">
             <div class="asset-preview-box">
-              <img id="preview-diet-img" src="../images/ataruti.png" alt="Diet Preview" class="asset-preview-img" onerror="this.src='../images/ataruti.png';">
+              <img id="preview-diet-img" src="" alt="Diet Preview" class="asset-preview-img" onerror="this.style.opacity='0';" onload="this.style.opacity='1';">
               <span class="asset-preview-badge">Nutrition Image</span>
             </div>
             <div>
@@ -167,7 +167,7 @@
                 "A Familiar Choice for Everyday Meals" পুষ্টি ও স্বাস্থ্যকর রুটি সেকশনের ছবি।
               </p>
               <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="img-diet" class="form-input" style="flex: 1; min-width: 240px;" value="images/ataruti.png" oninput="updateAssetPreview('preview-diet-img', this.value)">
+                <input type="text" id="img-diet" class="form-input" style="flex: 1; min-width: 240px;" placeholder="Upload image via button" oninput="updateAssetPreview('preview-diet-img', this.value)">
                 <label class="btn btn-gold btn-sm" style="cursor: pointer; white-space: nowrap; margin: 0;">
                   📷 Upload Nutrition Photo
                   <input type="file" accept="image/*" style="display: none;" onchange="handleAssetUpload(event, 'img-diet', 'preview-diet-img', 'status-diet-img')">
@@ -611,8 +611,10 @@
       if (!el) return;
       if (url) {
         el.src = (url.startsWith('http') || url.startsWith('data:') || url.startsWith('/')) ? url : `../${url}`;
+        el.style.opacity = '1';
       } else {
-        el.src = '../images/ataruti.png';
+        el.src = '';
+        el.style.opacity = '0';
       }
     }
 
@@ -786,8 +788,8 @@
                   id="prep-preview-${idx}" 
                   src="${imgSrc}" 
                   alt="${s.title}" 
-                  style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid var(--admin-border); background: #FFF;"
-                  onerror="this.src='../images/prep/prep-1-quality.jpg';"
+                  style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; border: 1px solid var(--admin-border); background: #FAF8F5;"
+                  onerror="this.style.opacity='0';"
                 >
               </div>
 
@@ -866,10 +868,10 @@
 
       // 1. Section Images Map
       const sectionImages = {
-        hero_image: document.getElementById('img-hero')?.value.trim() || 'images/ataruti.png',
-        story_image: document.getElementById('img-story')?.value.trim() || 'images/moydaruti.png',
-        diet_image: document.getElementById('img-diet')?.value.trim() || 'images/ataruti.png',
-        logo_image: document.getElementById('img-logo')?.value.trim() || 'images/logo2.png'
+        hero_image: document.getElementById('img-hero')?.value.trim() || '',
+        story_image: document.getElementById('img-story')?.value.trim() || '',
+        diet_image: document.getElementById('img-diet')?.value.trim() || '',
+        logo_image: document.getElementById('img-logo')?.value.trim() || ''
       };
 
       // 2. General Content & Hero

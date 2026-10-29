@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>US BENGOL | Traditional Bangladeshi Roti & Parota</title>
+  <title>US BENGOL | তাজা ও ঐতিহ্যবাহী আটা রুটি, ময়দা রুটি ও পরোটা ডেলিভারি</title>
   
   <!-- Primary Meta Tags -->
   <meta name="title" content="US BENGOL | Traditional Bangladeshi Roti & Parota">
-  <meta name="description" content="US BENGOL brings the familiar taste of homemade Bangladeshi roti and parota to modern dining tables. Freshly prepared Atta Roti, Maida Roti, and Parota delivered across Bangladesh.">
-  <meta name="keywords" content="traditional roti, atta roti, maida roti, parota, bangladeshi homemade food, fresh roti delivery bangladesh, us bengol">
+  <meta name="description" content="US BENGOL - প্রতিদিনের পরিচিত ঘরোয়া স্বাদে তাজা আটা রুটি, ময়দা রুটি ও খাস্তা পরোটা। বাসাবাড়ি ও রেস্তোরাঁ/ইভেন্টের বাল্ক অর্ডারে ঢাকা সহ সারা দেশে দ্রুত ডেলিভারি।">
+  <meta name="keywords" content="আটা রুটি, ময়দা রুটি, পরোটা, রুটি ডেলিভারি ঢাকা, atta roti, maida roti, parota, fresh roti delivery dhaka, traditional roti delivery bangladesh, us bengol, bulk roti supplier">
   <meta name="author" content="US BENGOL">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://usbengol.bd/">
@@ -90,7 +90,7 @@
   <header class="navbar brand-center-header" id="navbar">
     <div class="container brand-center-container">
       <a href="#hero" class="brand-center-logo-link" aria-label="US BENGOL Home">
-        <img src="images/logo2.png" alt="US BENGOL Traditional Food Logo" class="brand-logo-img" id="site-brand-logo">
+        <img src="images/logo2.png" alt="US BENGOL Traditional Food Logo" class="brand-logo-img" id="site-brand-logo" onerror="this.style.display='none'; document.getElementById('brand-center-text-fallback').style.display='inline-block';"><span id="brand-center-text-fallback" style="display:none; font-family:'Playfair Display',serif; font-size:1.75rem; font-weight:800; color:var(--color-brown-900); letter-spacing:0.04em;">US BENGOL</span>
       </a>
     </div>
   </header>
@@ -140,7 +140,7 @@
         <div class="hero-visual-stage">
           <div class="hero-image-wrapper">
             <img 
-              src="images/ataruti.png" 
+              src="" onerror="this.style.opacity='0';" onload="this.style.opacity='1';" 
               alt="Freshly prepared US BENGOL Atta Roti in traditional basket" 
               class="hero-main-img"
               id="hero-main-img"
@@ -342,7 +342,7 @@
         <div class="story-image-showcase">
           <div class="story-main-card">
             <img 
-              src="images/moydaruti.png" 
+              src="" onerror="this.style.opacity='0';" onload="this.style.opacity='1';" 
               alt="Authentic traditional handmade roti served with warmth" 
               class="story-img"
               id="story-main-img"
@@ -395,14 +395,14 @@
           <!-- Background pinned video -->
           <video 
             id="production-video" 
-            src="videos/production-journey.mp4" 
-            poster="images/prep/prep-1-quality.jpg"
+            <!-- video src in source tag below -->
+            poster=""
             muted 
-            autoplay 
+            <!-- lazy streamed on scroll -->
             loop 
             playsinline 
             webkit-playsinline 
-            preload="auto"
+            preload="none"
             class="production-bg-video"
             aria-label="US BENGOL authentic production journey footage"
           >
@@ -557,7 +557,7 @@
 
           <div class="diet-visual">
             <img 
-              src="images/ataruti.png" 
+              src="" onerror="this.style.opacity='0';" onload="this.style.opacity='1';" 
               alt="Wholesome Atta Roti for mindful daily meals" 
               id="diet-main-img"
               loading="lazy"
@@ -1299,7 +1299,7 @@
     <div class="container">
       <div class="footer-top-grid">
         <div class="footer-brand-info">
-          <img src="images/logo2.png" alt="US BENGOL Brand Logo" class="footer-logo" id="site-footer-logo">
+          <img src="images/logo2.png" alt="US BENGOL Brand Logo" class="footer-logo" id="site-footer-logo" onerror="this.style.display='none'; document.getElementById('footer-brand-text-fallback').style.display='block';"><span id="footer-brand-text-fallback" style="display:none; font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:800; color:#FFF; margin-bottom:12px;">US BENGOL</span>
           <p class="footer-brand-statement">
             The familiar taste of home, presented beautifully. Fresh, wholesome Bangladeshi roti and parota made with uncompromised care.
           </p>

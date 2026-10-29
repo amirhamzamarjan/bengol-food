@@ -276,7 +276,11 @@
           <tr>
             <td>
               <div style="display: flex; align-items: center; gap: 12px;">
-                <img src="../${p.image_url}" class="table-prod-thumb" alt="${p.name}" onerror="this.src='../images/ataruti.png';">
+                ${p.image_url ? `
+                  <img src="${(p.image_url.startsWith('http') || p.image_url.startsWith('data:') || p.image_url.startsWith('/')) ? p.image_url : `../${p.image_url}`}" class="table-prod-thumb" alt="${p.name}" onerror="this.style.display='none';">
+                ` : `
+                  <div style="width: 44px; height: 44px; border-radius: 6px; border: 1px dashed var(--admin-border); background: #FAF8F5; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🫓</div>
+                `}
                 <div>
                   <strong>${p.name}</strong><br>
                   <span style="font-size: 0.8rem; color: var(--admin-muted);">${p.bengali_name || p.bengaliName || ''}</span>

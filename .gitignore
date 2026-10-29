@@ -1,0 +1,13 @@
+# Local image backups
+images_backup/
+
+# Environment files
+.env
+.env.local
+
+# Operating System & IDE files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

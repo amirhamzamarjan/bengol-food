@@ -177,12 +177,23 @@
 
         // Main image
         const mainImg = document.getElementById('pd-main-image');
-        mainImg.src = prod.image_url;
-        mainImg.alt = prod.name;
+        if (prod.image_url) {
+          mainImg.src = prod.image_url;
+          mainImg.alt = prod.name;
+          mainImg.style.display = 'block';
+          const ph = document.getElementById('pd-empty-placeholder');
+          if (ph) ph.remove();
+        } else {
+          mainImg.style.display = 'none';
+          const wrap = document.querySelector('.product-main-image-wrap');
+          if (wrap && !document.getElementById('pd-empty-placeholder')) {
+            wrap.insertAdjacentHTML('beforeend', `<div id="pd-empty-placeholder" style="width: 100%; height: 100%; min-height: 350px; display: flex; align-items: center; justify-content: center; background: radial-gradient(circle, #FAF6EE 0%, #EFE8DA 100%); flex-direction: column; gap: 12px; border-radius: var(--radius-lg);"><span style="font-size: 3rem;">🫓</span><span style="color: var(--color-brown-900); font-weight: 700;">${prod.name}</span><small style="color: var(--color-brown-muted);">ছবিটি অ্যাডমিন প্যানেল থেকে আপলোড করা হবে</small></div>`);
+          }
+        }
 
         // Thumbnails
         const thumbsEl = document.getElementById('pd-thumbs');
-        const allImages = [prod.image_url];
+        const allImages = prod.image_url ? [prod.image_url] : [];
         
         // Add gallery images if available
         let galleryImgs = prod.gallery_images || [];
@@ -215,6 +226,35 @@
         
         const price = parseFloat(prod.price) || 0;
         document.getElementById('pd-price').textContent = `৳${price.toFixed(2)}`;
+
+        // Dynamic SEO Tags & Schema.org Structured Data
+        const pageTitle = `${prod.name} (${prod.bengali_name || ''}) | US BENGOL - খাঁটি ও তাজা রুটি`;
+        document.title = pageTitle;
+        const metaDesc = document.querySelector('meta[name="description"]');
+        if (metaDesc && prod.description) {
+          metaDesc.setAttribute('content', `${prod.name} (${prod.bengali_name || ''}): ${prod.description.substring(0, 140)}... ফ্রেশ ডেলিভারি ঢাকা ও সারা বাংলাদেশ।`);
+        }
+        try {
+          const schemaScript = document.createElement('script');
+          schemaScript.type = 'application/ld+json';
+          schemaScript.textContent = JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Product",
+            "name": prod.name,
+            "alternateName": prod.bengali_name || prod.name,
+            "description": prod.description,
+            "image": prod.image_url ? (prod.image_url.startsWith('http') ? prod.image_url : `https://usbengol.bd/${prod.image_url}`) : "https://usbengol.bd/images/logo2.png",
+            "brand": { "@type": "Brand", "name": "US BENGOL" },
+            "offers": {
+              "@type": "Offer",
+              "url": window.location.href,
+              "priceCurrency": "BDT",
+              "price": price > 0 ? price : "0",
+              "availability": prod.is_available ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+            }
+          });
+          document.head.appendChild(schemaScript);
+        } catch(e) {}
 
         // Nutrition notes
         const metaEl = document.getElementById('pd-meta');

@@ -514,7 +514,7 @@
     /* ---------------------------------------------------------
        IMAGE OPTIMIZER & UPLOAD (COMPRESS + SUPABASE STORAGE / BASE64)
        --------------------------------------------------------- */
-    async compressImage(file, maxWidth = 1400, maxHeight = 1400, quality = 0.82) {
+    async compressImage(file, maxWidth = 1200, maxHeight = 1200, quality = 0.8) {
       if (!file || !file.type || !file.type.startsWith('image/')) return file;
       if (file.type === 'image/svg+xml') return file;
 
@@ -526,8 +526,8 @@
             let width = img.width;
             let height = img.height;
 
-            // If already compact, keep as is
-            if (width <= maxWidth && height <= maxHeight && file.size < 180 * 1024) {
+            // If already compact and within dimensions, return as is
+            if (width <= maxWidth && height <= maxHeight && file.size < 120 * 1024) {
               return resolve(file);
             }
 
@@ -580,7 +580,7 @@
         return { success: false, error: 'সঠিক ফরম্যাটের ছবি ব্যবহার করুন (Use JPG, PNG, WebP, or SVG)' };
       }
 
-      // 1. Intelligent compression: handles even 15MB photos, turning them into ~50KB-120KB
+      // 1. Intelligent fast compression
       let processedFile = file;
       try {
         processedFile = await this.compressImage(file);
@@ -588,7 +588,7 @@
         console.warn('[US BENGOL] Image compression notice:', err);
       }
 
-      // 2. Try Supabase Storage upload
+      // 2. Upload to Supabase Storage
       if (this.isConfigured && this.client) {
         try {
           const fileExt = processedFile.name.split('.').pop() || 'jpg';
@@ -615,13 +615,29 @@
               sizeKb: Math.round(processedFile.size / 1024)
             };
           }
-          console.warn('[US BENGOL] Supabase Storage upload notice:', error.message);
+
+          console.error('[US BENGOL] Supabase Storage upload error:', error);
+          let userMsg = error.message || 'Upload failed';
+          if (userMsg.toLowerCase().includes('not found') || userMsg.toLowerCase().includes('nosuchbucket') || error.statusCode === '404') {
+            userMsg = `Supabase Storage-এ "${bucket}" বালতি (Bucket) পাওয়া যায়নি। দয়া করে Supabase ড্যাশবোর্ডে Storage -> New Bucket থেকে "${bucket}" তৈরি করে Public অন করুন অথবা supabase_complete_setup.sql রান করুন।`;
+          } else if (userMsg.toLowerCase().includes('row-level security') || userMsg.toLowerCase().includes('policy')) {
+            userMsg = `Supabase Storage RLS পলিসি ত্রুটি। অনুগ্রহ করে supabase_complete_setup.sql রান করে Storage Policies আপডেট করুন।`;
+          }
+
+          return {
+            success: false,
+            error: userMsg
+          };
         } catch (e) {
-          console.warn('[US BENGOL] Storage upload caught:', e);
+          console.error('[US BENGOL] Storage upload caught exception:', e);
+          return {
+            success: false,
+            error: `Storage error: ${e.message}`
+          };
         }
       }
 
-      // 3. Resilient lightweight Base64 fallback (compressed ~50KB-100KB, never breaks DB/storage)
+      // 3. Fallback only if Supabase client is not configured (offline demo mode)
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve({
