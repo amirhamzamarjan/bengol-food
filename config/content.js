@@ -19,7 +19,7 @@ window.US_BENGOL_CONFIG = {
     dispatchAddress: "Bawgan, Uttarkhan, Dhaka 1230, Bangladesh",
     address: "Kitchen: Ullapara, Sirajganj | Dispatch: Uttarkhan, Dhaka",
     deliveryScope: "Nationwide across Bangladesh",
-    logoPath: "images/logo2.png"
+    logoPath: "images/usbengolfood.png"
   },
 
   // =========================================================================

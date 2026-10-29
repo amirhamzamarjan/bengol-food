@@ -549,18 +549,21 @@
             const ctx = canvas.getContext('2d');
             ctx.drawImage(img, 0, 0, width, height);
 
+            const outputType = file.type === 'image/png' ? 'image/png' : (file.type === 'image/webp' ? 'image/webp' : 'image/jpeg');
+            const ext = outputType === 'image/png' ? '.png' : (outputType === 'image/webp' ? '.webp' : '.jpg');
+
             canvas.toBlob((blob) => {
               if (blob) {
-                const newName = file.name.replace(/\.[^.]+$/, '.jpg');
+                const newName = file.name.replace(/\.[^.]+$/, ext);
                 const compressedFile = new File([blob], newName, {
-                  type: 'image/jpeg',
+                  type: outputType,
                   lastModified: Date.now()
                 });
                 resolve(compressedFile);
               } else {
                 resolve(file);
               }
-            }, 'image/jpeg', quality);
+            }, outputType, quality);
           };
           img.onerror = () => resolve(file);
           img.src = e.target.result;
